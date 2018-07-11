@@ -2,28 +2,88 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as productAction from '../../actions/productAction';
-import { Redirect } from 'react-router';
 import Header from '../header/Header.js';
 import Menu from '../menu/Menu.js';
 import CartList from './Cart-List';
 import lodash from 'lodash';
+import toastr from 'toastr';
+import {Link} from 'react-router-dom';
+
 
 class ProductCart extends Component {
   constructor(props, context) {
     super(props, context);
-    this.state= {
-      cartData: []
-    };
+    this.state={
+      cart:[],
+      totalList:[]
+    }
     this.deleteCart = this.deleteCart.bind(this);
+    this.updateCart = this.updateCart.bind(this);
+    this.decreaseQuantity = this.decreaseQuantity.bind(this);
   }
 
   componentWillMount() {
-    this.props.actions.getCartData();
+    this.getCartList();
+    this.orderSummaryList();
   }
 
-  deleteCart(id) {
-    this.props.actions.deleteCartData(id).then(response=>{
-      console.log("response----", response)
+  getCartList() {
+    this.props.actions.getCartData().then(response=>{
+      if(response.status === 200) {
+        this.setState({cart: response.data});
+      } else {
+        this.setState({cart: []});
+      }
+    });
+  }
+
+  orderSummaryList() {
+    this.props.actions.getOrderSummaryData().then(response=>{
+      if(response.status === 200) {
+        this.setState({totalList: response.data});
+      } else {
+        this.setState({totalList: []});
+      }
+    });
+  }
+
+  deleteCart(shoppingId, productId) {
+    this.props.actions.deleteCartData(shoppingId, productId).then(response=>{
+      if(response.status === 200) {
+        toastr.success("Product deleted successfully from the cart.");
+        this.getCartList();
+        this.orderSummaryList();
+      } else {
+        toastr.error("Unable to deleted product from the cart.")
+      }
+    });
+  }
+
+  updateCart(product) {
+    var productQuantity = 1;
+    product.productQuantity = 1 + product.productQuantity;
+    this.props.actions.updateCartData(product).then(response=>{
+      if(response.status === 200) {
+        toastr.success(response.message);
+        this.getCartList();
+        this.orderSummaryList();
+      } else {
+        toastr.error(response.message)
+      }
+    });
+  }
+
+  decreaseQuantity(product) {
+    var productQuantity = 1;
+    product.productQuantity = product.productQuantity -1;
+    this.props.actions.updateCartData(product).then(response=>{
+      if(response.status === 200) {
+        toastr.success(response.message);
+        this.getCartList();
+        this.orderSummaryList();
+      } else {
+        toastr.error(response.message)
+      }
     });
   }
 
@@ -42,9 +102,26 @@ class ProductCart extends Component {
                     <h3 className="title">Order Review</h3>
                   </div>
                   <CartList 
-                    cartData = {this.props.productCart}
+                    cartData = {this.state.cart}
                     deleteCart={this.deleteCart}
+                    updateCart={this.updateCart}
+                    decreaseQuantity={this.decreaseQuantity}
+                    totalList={this.state.totalList}
                   />
+                </div>
+              </div>
+              <div className="_2zqhDs _15r1AP">
+                <div className="_2CQPOE">
+                  <Link to='/'>
+                    <button className="_2AkmmA _14O7kc mrmU5i">
+                      <span>Continue Shopping</span>
+                    </button>
+                  </Link>
+                  <Link to='/checkout'>
+                    <button className="_2AkmmA _14O7kc _7UHT_c">
+                      <span> Place Order</span>
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

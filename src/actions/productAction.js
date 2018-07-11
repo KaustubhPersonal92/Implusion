@@ -42,19 +42,52 @@ export function addToCart(cartData) {
 export function getCartData() {
   return function (dispatch, getState) {
     return ProductApi.getCartInfoApi().then(response => {
-      dispatch(loadCartSuccess(response));
-    }).catch(error => {
-      console.log(error)
-    });
-  };
-}
-
-export function deleteCartData(shoppingId) {
-  return function (dispatch, getState) {
-    return ProductApi.deleteCartApi(shoppingId).then(response => {
+      console.log("response---", response)
       return response;
     }).catch(error => {
       console.log(error)
     });
   };
 }
+
+export function getOrderSummaryData() {
+  return function (dispatch, getState) {
+    return ProductApi.getOrderSummaryApi().then(response => {
+      console.log("response---", response)
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function deleteCartData(shoppingId, productId) {
+  return function (dispatch, getState) {
+    return ProductApi.deleteCartApi(shoppingId, productId).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function updateCartData(product) {
+  return function (dispatch, getState) {
+    return ProductApi.updateCartApi(product).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function addUser(data) {
+  return function (dispatch, getState) {
+    return ProductApi.addUserApi(data).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+

@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 
 class Header extends Component {
-  constructor(props, context) {
-    super(props, context);
-    //this.getCartData = this.getCartData.bind(this);
-  }
+  
 
   render() {
     return (
@@ -41,7 +38,7 @@ class Header extends Component {
                   </li>
                   <li className="header-account dropdown default-dropdown">
                     <Link role="button" to="/viewcart">
-                      <i className="fa fa-shopping-cart" style={{"font-size":"22px"}}></i>
+                      <i className="fa fa-shopping-cart" style={{"fontSize":"22px"}}></i>
                       &nbsp;&nbsp;<strong className="text-uppercase">Cart</strong>
                     </Link>
                 </li>

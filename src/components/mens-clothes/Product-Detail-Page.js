@@ -5,6 +5,7 @@ import * as productAction from '../../actions/productAction';
 import Header from '../header/Header.js';
 import Menu from '../menu/Menu.js';
 import Footer from '../footer/Footer.js';
+import { Redirect } from 'react-router';
 
 class ProductDetailPage extends Component {
   constructor(props, context) {
@@ -20,29 +21,26 @@ class ProductDetailPage extends Component {
       },
       addToCartCounter:0,
       cart:{
-        quantity: '',
         productId: '',
-        userId: ''
+        userId: '',
+        price:''
       },
+      navigate: false,
     };
-    this.onchangeQuantity = this.onchangeQuantity.bind(this);
     this.addToCart = this.addToCart.bind(this);
   }
 
   addToCart() {
-    /*var addToCart = this.state.addToCartCounter;
-    addToCart = 1;
-    this.setState({addToCartCounter: addToCart});*/
-    this.props.actions.addToCart(this.state.cart);
-    console.log("this.state.cart--", this.state.cart)
-  }
-
-  onchangeQuantity(event) {
     var cart = this.state.cart;
-    var field = event.target.name;
-    cart[field] = event.target.value;
-    
+    cart.price= this.state.productInfo.productPrice;
+    cart.quantity =1;
     this.setState({cart: cart});
+    this.props.actions.addToCart(this.state.cart).then(response=>{
+      console.log("response---", response);
+      if(response.status === 200) {
+        this.setState({navigate: true});
+      }
+    });
   }
 
   componentWillMount() {
@@ -72,6 +70,11 @@ class ProductDetailPage extends Component {
       productImage = <img src='' alt="No image"/>
     } else {
       productImage = <img src={require('../../assets/images/'+this.state.productInfo.productImage)} alt =""/>
+    }
+
+    const { navigate } = this.state
+    if (navigate) {
+      return <Redirect to='/viewcart/' push={true} />
     }
     return (
       <div>
@@ -121,10 +124,6 @@ class ProductDetailPage extends Component {
                     </ul>
                   </div>
                   <div className="product-btns">
-                    <div className="qty-input">
-                      <span className="text-uppercase">QTY: </span>
-                      <input className="input" type="number" onChange={this.onchangeQuantity} name="quantity" value={this.state.cart.quantity}/>
-                    </div>
                     <button className="primary-btn add-to-cart" onClick={this.addToCart}><i className="fa fa-shopping-cart"></i> Add to Cart</button>    
                   </div>
                 </div>

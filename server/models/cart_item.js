@@ -11,6 +11,7 @@ module.exports = function(sequelize, DataTypes) {
             quantity: DataTypes.STRING,
             createdDate: DataTypes.STRING,
             shoppingCartId: DataTypes.STRING,
+            price: DataTypes.STRING,
         }, 
         {
             freezeTableName: true,
