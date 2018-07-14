@@ -4,6 +4,11 @@ var db = require('../../../../config/sequelize').db;
 var generalConfig = require('../../../../config/generalConfig');
 var async = require('async');
 var Sequelize = require("sequelize");
+var email = require('nodemailer');
+
+https://www.nexmo.com/blog/2016/10/19/how-to-send-sms-messages-with-node-js-and-express-dr/
+
+
 
 
 /**
@@ -409,6 +414,7 @@ var addUserProcess = function(user, cart, callback) {
                 },
                 attributes:['id']
             }).then(function(user) {
+                sendEmailUser(user);
                 addUserProduct(user.id, cart, function(respone){
                     if(respone) {
                         callback({
@@ -436,11 +442,6 @@ var addUserProcess = function(user, cart, callback) {
     });    
 };
 
-
-
-
-
-
 var addUserProduct = function(userId, cart, callback) {
     for(let cartObject of cart) {
         cartObject.user_id = userId;
@@ -453,4 +454,46 @@ var addUserProduct = function(userId, cart, callback) {
         })
     }
 }
+
+/**
+ * sendEmailUser will send mail to user
+ * @param  {obj}   req
+ * @param  {obj}   res
+ * @return json for fail or success notification
+*/
+var sendEmailUser = function(user, callback) {
+    var emailTemplate = generalConfig.emailTemplate;
+    var emailbody = emailTemplate.usercredentailsEmailBody;
+    emailbody = emailbody.replace("%userfullname%", user.firstName);
+    emailbody = emailbody.replace("%result%", "Test");
+    
+    var emailmessage = emailTemplate.emailContainerHeaderString;
+    emailmessage += emailbody;
+    emailmessage += emailTemplate.emailContainerFooterString;
+    // Replace user and pass with your gmail credential to send mail.
+    var send = email.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'kmkaustubh11@gmail.com',
+            pass: 'K@ustubh11'
+        }
+    });
+    var message = {
+        from:    "noreply@impulsion.com",
+        to:      'kaustubh@squats.in',
+        subject: emailTemplate.userResultSubject,
+        html:emailmessage
+    };
+
+    send.sendMail(message, function (err, info) {
+        if(err) console.error(err);
+        else {
+            res.json({
+                status: 200,
+                data:[], 
+                message: 'Result has been email to you.'
+            });
+        }
+    });
+};
 

@@ -12,8 +12,6 @@ import './assets/css/nouislider.min.css';
 import './assets/css/font-awesome.min.css';
 import './assets/css/style.css';
 import '../node_modules/toastr/build/toastr.min.css';
-import './assets/css/main.css';
-import './assets/css/util.css';
 const store = configureStore();
 
 ReactDOM.render(
