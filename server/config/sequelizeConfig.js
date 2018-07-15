@@ -6,8 +6,8 @@ module.exports = {
     },
    "db": {
         "username": 'root',
-        "password": 'root',
-        "database": 'impulsion',
+        "password": '12345678',
+        "database": 'implusion',
         "host": 'localhost',
         "dialect": 'mysql',
         "port": '3306'

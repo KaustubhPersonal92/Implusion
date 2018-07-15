@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Header from '../header/Header.js';
-import Menu from '../menu/Menu.js';
 import Slider from '../slider/Slider.js';
 import MensClothes from '../mens-clothes/Mens-Clothes.js';
 import Footer from '../footer/Footer.js';
+import {Link} from 'react-router-dom';
 
 class LoginPage extends Component {
   constructor(props, context) {
@@ -14,7 +14,6 @@ class LoginPage extends Component {
     return (
       <div>
         <Header/>
-        <Menu/>
         <div className="login-form">
           <h2 className="text-center">Log in</h2>       
           <div className="form-group">
@@ -29,7 +28,7 @@ class LoginPage extends Component {
           <div className="clearfix">
             <a href="#" className="pull-right">Forgot Password?</a>
           </div>        
-          <p className="text-center"><a href="#">Create an Account</a></p>
+          <p className="text-center"><Link to="checkout">Create an Account</Link></p>
         </div> 
         <Footer/>
       </div>

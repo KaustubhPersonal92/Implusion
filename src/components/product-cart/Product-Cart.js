@@ -3,12 +3,11 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as productAction from '../../actions/productAction';
 import Header from '../header/Header.js';
-import Menu from '../menu/Menu.js';
 import CartList from './Cart-List';
 import lodash from 'lodash';
 import toastr from 'toastr';
 import {Link} from 'react-router-dom';
-
+import Footer from '../footer/Footer';
 
 class ProductCart extends Component {
   constructor(props, context) {
@@ -92,7 +91,6 @@ class ProductCart extends Component {
     return (
       <div>
         <Header/>
-        <Menu/>
         <div className="section">
           <div className="container">
             <div className="row">
@@ -127,6 +125,7 @@ class ProductCart extends Component {
             </div>
           </div>
         </div>
+        <Footer/>
       </div>
     );
   }

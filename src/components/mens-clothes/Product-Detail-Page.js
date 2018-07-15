@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as productAction from '../../actions/productAction';
 import Header from '../header/Header.js';
-import Menu from '../menu/Menu.js';
 import Footer from '../footer/Footer.js';
 import { Redirect } from 'react-router';
 
@@ -53,6 +52,7 @@ class ProductDetailPage extends Component {
         if(response.status === 200) {
           var productInfo = this.state.productInfo;
           productInfo.productName= response.data.Name;
+          console.log("productInfo.productName= response.data.Name;---", productInfo.productName= response.data.Name);
           productInfo.productPrice= response.data.Price;
           productInfo.productAvailability= response.data.Availability;
           productInfo.productImage= response.data.Product_Image;
@@ -79,17 +79,6 @@ class ProductDetailPage extends Component {
     return (
       <div>
         <Header addToCartCounter={this.state.addToCartCounter}/>
-        <Menu/>
-        <div id="breadcrumb">
-          <div className="container">
-            <ul className="breadcrumb">
-              <li><a>Home</a></li>
-              <li><a>Products</a></li>
-              <li><a>Category</a></li>
-              <li className="active">{this.state.productInfo.productName}</li>
-            </ul>
-          </div>
-        </div>
         <div className="section">
           <div className="container">
             <div className="row">
@@ -103,11 +92,11 @@ class ProductDetailPage extends Component {
                 </div>
                 <div className="col-md-6">
                   <div className="product-body">
-                    <h4 className="product-name">Implusion {this.state.productInfo.productName} T-shirt</h4>
+                    <h4 className="product-name">Impulsion {this.state.productInfo.productName} T-shirt</h4>
                     <h4 className="product-price"><i className="fa fa-inr"> {this.state.productInfo.productPrice}</i></h4>
                   </div>
                   <p><strong>Availability:</strong> {this.state.productInfo.productAvailability}</p>
-                  <p><strong>Brand:</strong> Implusion</p>
+                  <p><strong>Brand:</strong> Impulsion</p>
                   <div className="product-options">
                     <ul className="size-option">
                       <li><span className="text-uppercase">Size:</span></li>

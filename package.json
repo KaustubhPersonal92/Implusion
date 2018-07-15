@@ -26,10 +26,11 @@
     "redux-immutable-state-invariant": "^2.1.0",
     "redux-thunk": "^2.2.0",
     "sequelize": "^4.37.6",
-    "toastr": "^2.1.4"
+    "toastr": "^2.1.4",
+    "twilio": "^3.17.6"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm run build && node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

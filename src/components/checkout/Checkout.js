@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Header from '../header/Header.js';
-import Menu from '../menu/Menu.js';
 import {Link} from 'react-router-dom';
 import * as productAction from '../../actions/productAction';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import toastr from 'toastr';
+import Footer from '../footer/Footer';
 
 class Checkout extends Component {
 	constructor(props, context) {
@@ -25,7 +25,10 @@ class Checkout extends Component {
 	    this.addUser = this.addUser.bind(this);
 	    this.updateUserState = this.updateUserState.bind(this);
 	    this.getCartList();
-  	}
+		}
+		componentWillMount() {
+			
+		}
 
   	updateUserState(event) {
 	    const field = event.target.name;
@@ -50,10 +53,11 @@ class Checkout extends Component {
   		};
   		this.props.actions.addUser(userProduct).then(response=>{
   			if(response.status === 200) {
-				toastr.success(response.message);
-			} else {
-				toastr.error(response.message);
-			}
+					const $ = window.$;
+					$('#myModal').modal('show');
+				} else {
+					toastr.error(response.message);
+				}
 	    });
   	}
 
@@ -61,19 +65,10 @@ class Checkout extends Component {
     return (
 		<div>
 			<Header/>
-        	<Menu/>
-        	<div id="breadcrumb">
-				<div className="container">
-					<ul className="breadcrumb">
-						<li><Link to='/'>Home</Link></li>
-						<li className="active">Checkout</li>
-					</ul>
-				</div>
-			</div>
-			<div className="section">
+      <div className="section">
 				<div className="container">
 					<div className="row">
-						<div className="col-md-6">
+						<div className="col-md-12">
 							<div className="billing-details">
 								<p>Already a customer ? <Link to='/login'>Login</Link></p>
 								<div className="section-title">
@@ -111,9 +106,6 @@ class Checkout extends Component {
 					</div>
 				</div>
 			</div>
-			<div className="text-center">
-				<a href="#myModal" className="trigger-btn" data-toggle="modal">Click to Open Confirm Modal</a>
-			</div>
 			<div id="myModal" className="modal fade">
 				<div className="modal-dialog modal-confirm">
 					<div className="modal-content">
@@ -124,14 +116,15 @@ class Checkout extends Component {
 							<h4 className="modal-title">Awesome!</h4>	
 						</div>
 						<div className="modal-body">
-							<p className="text-center">Your booking has been confirmed. Check your email for detials.</p>
+							<p className="text-center">Your order has been confirmed. Please check your email for order confirmation.</p>
 						</div>
 						<div className="modal-footer">
-							<button className="btn btn-success btn-block" data-dismiss="modal">OK</button>
+							<Link className="btn btn-success btn-block" to="/">OK</Link>
 						</div>
 					</div>
 				</div>
 			</div>
+			<Footer/>
 		</div>
     );
   }

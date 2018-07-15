@@ -21,6 +21,7 @@ https://www.nexmo.com/blog/2016/10/19/how-to-send-sms-messages-with-node-js-and-
 */
 
 exports.getProductImages = function(req, res) {
+    console.log("Reuqtes commee-----")
     db.models.products.findAll().then(function(product) {
         if(product) {
             res.json({
