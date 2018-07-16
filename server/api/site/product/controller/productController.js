@@ -254,10 +254,10 @@ exports.deleteCart = function(req, res) {
 */
 
 exports.updateCartProduct = function(req, res) {
-    console.log("Request come for update");
+    console.log("Request come for update1", req.params);
     db.models.products.findOne({
         where:{
-            id: req.body.productId
+            id: req.body.product_id
         }
     }).then(function(data){
         if(data) {
