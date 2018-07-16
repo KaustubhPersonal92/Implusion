@@ -11,6 +11,7 @@ var expressValidator = require('express-validator');
 //const port = 3100;
 
 module.exports = function(app) {
+
   var productRoute = require('./api/site/product/route/productRoute.js');
   new productRoute(app);
 
