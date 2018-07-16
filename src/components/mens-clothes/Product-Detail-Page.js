@@ -67,7 +67,7 @@ class ProductDetailPage extends Component {
     var productImage= '';
     const imageLoad = this.state.productInfo.imageLoad;
     if(imageLoad) {
-      productImage = <img src='' alt="No image"/>
+      productImage = <img src={require('../../assets/images/blank-image.png')}  alt="No image"/>
     } else {
       productImage = <img src={require('../../assets/images/'+this.state.productInfo.productImage)} alt =""/>
     }
