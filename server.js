@@ -8,7 +8,7 @@ var expressValidator = require('express-validator');
 
 
 const app = express();
-
+const url ='http://ec2-54-191-213-64.us-west-2.compute.amazonaws.com:'
 /*eslint-disable no-console */
 
 app.set('port', (process.env.PORT || 8080));
@@ -35,6 +35,6 @@ app.listen(app.get('port'), function (err) {
     if (err) {
         console.log(err);
     } else {
-        console.log('Server started ' + app.get('port'));
+        console.log('Server started ', url+app.get('port'));
     }
 });
