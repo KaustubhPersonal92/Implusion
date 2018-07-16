@@ -5,10 +5,10 @@ module.exports = {
         path : __dirname + '/../models'
     },
    "db": {
-        "username": 'root',
-        "password": '12345678',
-        "database": 'implusion',
-        "host": 'localhost',
+        "username": 'admin',
+        "password": 'admin123',
+        "database": 'impulsion',
+        "host": '34.220.168.152',
         "dialect": 'mysql',
         "port": '3306'
     }
