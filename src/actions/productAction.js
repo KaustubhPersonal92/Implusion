@@ -91,3 +91,23 @@ export function addUser(data) {
   };
 }
 
+export function getUserProfileAction(userToken) {
+  return function (dispatch, getState) {
+    return ProductApi.getUserProfileApi(userToken).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function authentication(data) {
+  return function (dispatch, getState) {
+    return ProductApi.userAuthenticationApi(data).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+

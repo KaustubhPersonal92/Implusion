@@ -27,8 +27,8 @@ class LoginPage extends Component {
           </div>
           <div className="clearfix">
             <a href="#" className="pull-right">Forgot Password?</a>
-          </div>        
-          <p className="text-center"><Link to="checkout">Create an Account</Link></p>
+            <Link to="checkout">Create an Account</Link>
+          </div>
         </div> 
         <Footer/>
       </div>

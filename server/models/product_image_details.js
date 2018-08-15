@@ -23,6 +23,9 @@ module.exports = function(sequelize, DataTypes) {
             associate: function(models) {
                 products.hasMany(models.cart_item,{
                     foreignKey: 'productId'                        
+                }),
+                products.hasMany(models.order_details,{
+                    foreignKey: 'product_id'                        
                 })
             }
         }

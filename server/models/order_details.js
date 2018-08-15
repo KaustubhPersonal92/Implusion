@@ -19,7 +19,12 @@ module.exports = function(sequelize, DataTypes) {
             freezeTableName: true,
             tableName: 'order_details',
             timestamps: false,     
-            paranoid: true
+            paranoid: true,
+            // associate: function(models) {
+            //     order_details.belongsTo(models.products, {
+            //         foreignKey: 'productId'                        
+            //     })
+            // }
         }
     );
     return order_details;

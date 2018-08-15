@@ -715,6 +715,76 @@ textarea.input {
     border-top-right-radius: 0;
   }
 }
+
+._at {
+  font-size: 18px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.col-xs-12 {
+  width: 100%;
+}
+
+
+._ob._of, ._ob._og, ._ob._oh {
+  overflow:auto;
+  overflow-y:hidden;
+}
+
+._oj {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+._ob ._oc {
+  line-height: normal;
+  margin-bottom: 0;
+  padding: 20px 30px;
+}
+
+.col-xs-11 {
+  width: 91.66666667%
+}
+
+._on {
+  display: table;
+  width: 100%;
+}
+
+.text-grayed-12 {
+  color: rgba(0,0,0,.8); 
+  font-family: montserrat-regular,sans-serif;
+  font-size: 12px!important;
+  line-height: 18px;
+}
+
+._or {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  max-height: 2.824em;
+  min-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.success {
+  color: #51cccc!important;
+}
+
+._oj ._ol {
+  border: 1px solid #888;
+  border-radius: 50%;
+  height: 14px;
+  position: absolute;
+  right: 0;
+  top: 40%;
+  width: 14px;
+}
+
 /*----------------------------*\
 	Mobile nav
 \*----------------------------*/
@@ -1632,42 +1702,13 @@ textarea.input {
 ===========================================================*/
 
 .footer {
-  margin: 15px 0px;
-}
-
-.footer .footer-header {
-  font-size: 18px;
-  text-transform: uppercase;
-  margin-bottom: 30px;
-}
-
-.footer-logo {
-  margin-bottom: 30px;
-}
-
-.footer-logo .logo {
-  display: inline-block;
-}
-
-.footer-logo .logo>img {
-  width: 100%;
-  max-height: 70px;
-}
-
-.footer-social>li {
-  display: inline-block;
-  margin-right: 15px;
-  margin-bottom: 6px;
-}
-
-.footer-social>li:last-child {
-  margin-right: 0px;
-}
-
-.footer-copyright {
-  margin-top: 15px;
-  text-transform: uppercase;
-  font-size: 14px;
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: grey;
+   color: white;
+   text-align: center;
 }
 
 /*=========================================================
@@ -2061,6 +2102,8 @@ a {
     border: none;
     color: #fff;
 }
+
+
 
 
 /*=========================================================

@@ -18,6 +18,4 @@ module.exports = function(app) {
 
     app.put('/api/product/updateCart/:shoppingId', productController.updateCartProduct);
 
-    app.post('/api/product/addUser/', productController.addUser);
-
 };

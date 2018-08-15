@@ -18,7 +18,7 @@ const CartListRow = ({cart, deleteCart, updateCart, decreaseQuantity}) => {
       <td className="details">
         <a>{cart.productName}</a>
         <ul>
-          <li><span>Size: XL</span></li>
+          <li><span>Size: {cart.productSize}</span></li>
           <li><span>Color: Camelot</span></li>
         </ul>
       </td>

@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
             firstName: DataTypes.STRING,
             lastName: DataTypes.STRING,
             email: DataTypes.STRING,
+            password: DataTypes.STRING,
             address: DataTypes.STRING,
             city: DataTypes.STRING,
             pincode: DataTypes.STRING,

@@ -15,6 +15,9 @@ module.exports = function(app) {
   var productRoute = require('./api/site/product/route/productRoute.js');
   new productRoute(app);
 
+  var userRoute = require('./api/site/user/route/userRoute.js');
+  new userRoute(app);
+
 }
 
 // app.listen(port, function(err) {

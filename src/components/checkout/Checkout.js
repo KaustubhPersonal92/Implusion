@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import toastr from 'toastr';
 import Footer from '../footer/Footer';
+import lodash from 'lodash';
 
 class Checkout extends Component {
 	constructor(props, context) {
@@ -25,10 +26,11 @@ class Checkout extends Component {
 	    this.addUser = this.addUser.bind(this);
 	    this.updateUserState = this.updateUserState.bind(this);
 	    this.getCartList();
-		}
-		componentWillMount() {
-			
-		}
+	}
+
+	componentWillMount() {
+		
+	}
 
   	updateUserState(event) {
 	    const field = event.target.name;
@@ -47,59 +49,78 @@ class Checkout extends Component {
   	}
 
   	addUser() {
-  		var userProduct ={
-  			"user": this.state.userObject,
-  			"cart": this.state.cart
-  		};
-  		this.props.actions.addUser(userProduct).then(response=>{
-  			if(response.status === 200) {
-					const $ = window.$;
-					$('#myModal').modal('show');
+  		if(this.state.userObject.firstName != '') {
+  			var userProduct ={
+	  			"user": this.state.userObject,
+	  			"cart": this.state.cart
+  			};
+	  		this.props.actions.addUser(userProduct).then(response=>{
+	  			if(response.status === 200) {
+	  				
+					// const $ = window.$;
+					// $('#myModal').modal('show');
 				} else {
 					toastr.error(response.message);
 				}
-	    });
+		    });
+  		} else {
+  			toastr.error("Please fill the field");
+  		}
   	}
 
   	render() {
-    return (
+    	return (
 		<div>
 			<Header/>
-      <div className="section">
+      		<div className="section">
 				<div className="container">
-					<div className="row">
-						<div className="col-md-12">
-							<div className="billing-details">
-								<p>Already a customer ? <Link to='/login'>Login</Link></p>
-								<div className="section-title">
-									<h3 className="title">Billing Details</h3>
+					<div className="_n9 col-xs-12">
+						<div className="_oy">
+							<div className="col-xs-12 hidden-xs" style={{"fontSize": "20px"}}>
+								Select Delivery Address
+								<br/>
+								<br/>
+							</div>
+							<div className="col-xs-12 col-sm-6 noPdXs">
+								<div className="_oa _ob _og _oj" style={{"padding": "10px 0px"}}>
+									<div className="_oc col-xs-11">
+										<h3 className="_on">
+											<br/>
+											<div className="_op">Kaustubh</div>
+										</h3>
+										<div className="text-grayed-12">
+											<div style={{"margin": "5px auto 10px"}}>
+												<div className="_or">
+													411, SQUATS Fitness Pvt Ltd 4th floor,Platinum Square
+													Next to Hayatt hotel,Above Sriniwas veg restaurant.
+													<br/>
+												</div>
+												<div>
+													Pincode:
+													<br/>
+												</div>
+												<div>
+													Pincode:
+												</div>
+											</div>
+										</div>
+										<div>
+											<span className="success" style={{"fontSize": "12px"}}>
+												Edit
+											</span>
+											<span className="_ol"></span>
+										</div>
+									</div>
 								</div>
-								<div className="form-group">
-									<input className="input" type="text" name="firstName" placeholder="First Name" onChange={this.updateUserState}/>
-								</div>
-								<div className="form-group">
-									<input className="input" type="text" name="lastName" placeholder="Last Name" onChange={this.updateUserState}/>
-								</div>
-								<div className="form-group">
-									<input className="input" type="email" name="email" placeholder="Email" onChange={this.updateUserState}/>
-								</div>
-								<div className="form-group">
-									<input className="input" type="text" name="address" placeholder="Address" onChange={this.updateUserState}/>
-								</div>
-								<div className="form-group">
-									<input className="input" type="text" name="city" placeholder="City" onChange={this.updateUserState}/>
-								</div>
-								<div className="form-group">
-									<input className="input" type="text" name="country" placeholder="Country" onChange={this.updateUserState}/>
-								</div>
-								<div className="form-group">
-									<input className="input" type="text" name="pincode" placeholder="Pin Code" onChange={this.updateUserState}/>
-								</div>
-								<div className="form-group">
-									<input className="input" type="tel" name="contactNumber" placeholder="Contact Number" onChange={this.updateUserState}/>
-								</div>
-								<div className="form-group">
-									<button onClick={this.addUser} className="btn btn-primary">Create Account</button>
+								<br/>
+								<br/>
+							</div>
+							<div className="col-xs-12 col-sm-6 noPdXs success text-center hidden-xs">
+								<div className="_oa _ob _og _oj" style={{"padding": "45px 0px", "fontFamily": "montserrat-regular"}}>
+									<div className="_oc col-xs-12">
+										<span style={{"fontSize": "60px", "lineHeight": "0"}}>+</span>
+										<br/>ADD NEW ADDRESS
+									</div>
 								</div>
 							</div>
 						</div>

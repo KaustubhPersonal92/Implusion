@@ -8,20 +8,42 @@ import lodash from 'lodash';
 import toastr from 'toastr';
 import {Link} from 'react-router-dom';
 import Footer from '../footer/Footer';
+import { Redirect } from 'react-router';
 
 class ProductCart extends Component {
   constructor(props, context) {
     super(props, context);
     this.state={
       cart:[],
-      totalList:[]
+      totalList:[],
+      userProfile:[],
+      userObject:{
+        "firstName": '',
+        "lastName": '',
+        "email": '',
+        "address": '',
+        "city": '',
+        "pincode": '',
+        "contactNumber":''
+      },
+      auth:{
+        "email":'',
+        "password":''
+      },
+      userLoggedIn: false,
+      navigate: false,
     }
+    this.addUser = this.addUser.bind(this);
     this.deleteCart = this.deleteCart.bind(this);
     this.updateCart = this.updateCart.bind(this);
     this.decreaseQuantity = this.decreaseQuantity.bind(this);
   }
 
   componentWillMount() {
+    if(localStorage.getItem("user_id")) {
+      var id = localStorage.getItem("user_id");
+      this.getUserProfile(id);
+    }
     this.getCartList();
     this.orderSummaryList();
   }
@@ -38,6 +60,7 @@ class ProductCart extends Component {
 
   orderSummaryList() {
     this.props.actions.getOrderSummaryData().then(response=>{
+      console.log("response---", response)
       if(response.status === 200) {
         this.setState({totalList: response.data});
       } else {
@@ -86,11 +109,47 @@ class ProductCart extends Component {
     });
   }
 
+  addUser() {
+    var userProduct ={
+      "user": this.state.userObject,
+      "cart": this.state.cart
+    };
+    this.props.actions.addUser(userProduct).then(response=>{
+      if(response.status === 200) {
+        const $ = window.$;
+        $('.login-register-form').modal('hide');
+        this.getUserProfile(response.data.userID);
+      } else {
+        toastr.error(response.message);
+      }
+    });
+  }
+
+  getUserProfile(data) {
+    this.props.actions.getUserProfile(data).then(response=>{
+      if(response.status === 200) {
+        var userProfile = this.state.userProfile;
+        this.setState({userProfile:response.data})
+      } else {
+        toastr.error(response.message);
+      }
+    });
+  }
+
+  
+
 
   render() {
+    const { navigate } = this.state
+    if (navigate) {
+      return <Redirect to='/checkout/' push={true} />
+    }
     return (
       <div>
-        <Header/>
+        <Header
+          user={this.state.userProfile}
+          userLoggedIn = {this.state.userLoggedIn}
+        />
         <div className="section">
           <div className="container">
             <div className="row">
@@ -108,21 +167,25 @@ class ProductCart extends Component {
                   />
                 </div>
               </div>
-              <div className="_2zqhDs _15r1AP">
-                <div className="_2CQPOE">
-                  <Link to='/'>
-                    <button className="_2AkmmA _14O7kc mrmU5i">
-                      <span>Continue Shopping</span>
-                    </button>
-                  </Link>
-                  <Link to='/checkout'>
-                    <button className="_2AkmmA _14O7kc _7UHT_c">
-                      <span> Place Order</span>
-                    </button>
-                  </Link>
+              {
+                this.state.cart.length > 0 && 
+                <div className="_2zqhDs _15r1AP">
+                  <div className="_2CQPOE">
+                    <Link to='/'>
+                      <button className="_2AkmmA _14O7kc mrmU5i">
+                        <span>Continue Shopping</span>
+                      </button>
+                    </Link>
+                    <a href="#" data-toggle="modal" data-target=".login-register-form">
+                      <button className="_2AkmmA _14O7kc _7UHT_c">
+                        <span> Place Order</span>
+                      </button>
+                    </a>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
+            
           </div>
         </div>
         <Footer/>

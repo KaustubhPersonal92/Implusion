@@ -96,7 +96,7 @@ exports.addToCartProduct = function(req, res) {
             cartItem.price = req.body.price;
             db.models.cart_item.create(cartItem).then(function (respone) {
                 if(respone){
-                    orderDetail(req.body.productId, req.body.price, req.body.quantity, 'S', 'Yellow', function(orderResponse){
+                    orderDetail(req.body.productId, req.body.price, req.body.quantity, req.body.size, 'Yellow', function(orderResponse){
                         if(orderResponse){
                             res.json({
                                 status: 200,
@@ -146,7 +146,10 @@ exports.getCartDetail = function(req, res) {
         include: [{
             model: db.models.cart_item,
             include:[{
-                model: db.models.products
+                model: db.models.products,
+                include:[{
+                    model:db.models.order_details,
+                }]
             }]
         }]
     }).then(function (productData){
@@ -163,12 +166,12 @@ exports.getCartDetail = function(req, res) {
                             "productPrice": productData[item].dataValues.cart_items[i].price,
                             "productImage": productData[item].dataValues.cart_items[i].product.dataValues.Product_Image,
                             "productQuantity": productData[item].dataValues.cart_items[i].quantity,
-                            "product_id": productData[item].dataValues.cart_items[i].productId
+                            "product_id": productData[item].dataValues.cart_items[i].productId,
+                            "productSize": productData[item].dataValues.cart_items[i].product.dataValues.order_details[i].size
                         }
                         trialListArray.push(trialList);
                     }
                 }
-                
             }, function(err){
                 console.log(err);
             })
@@ -269,7 +272,7 @@ exports.updateCartProduct = function(req, res) {
                     shoppingCartId: req.params.shoppingId
                 }
             }).then(function(productData) {
-                updateOrderDetail(req.body.productId, cartData.price, cartData.quantity, function(respone){
+                updateOrderDetail(req.body.product_id, cartData.price, cartData.quantity, function(respone){
                     if(respone){
                         res.json({
                             status: 200,
@@ -311,7 +314,8 @@ var updateOrderDetail = function(product_id, product_price, product_quantity, ca
     updateOrder.price = product_price;
     updateOrder.quantity = product_quantity;
     updateOrder.total = product_price;
-    console.log("updateOrder----", updateOrder)
+    console.log("updateOrder----", updateOrder);
+    console.log("product_id----", product_id);
     db.models.order_details.update(updateOrder,{
         where:{
             product_id:product_id
@@ -366,10 +370,12 @@ exports.getCartSummary = function(req, res) {
 */
 
 exports.addUser = function(req, res) {
+    var generatePassword = Math.random().toString(36).slice(-8);
     var userData = {};
     userData.firstName = req.body.user.firstName;
     userData.lastName = req.body.user.lastName;
     userData.email = req.body.user.email;
+    userData.password = generatePassword;
     userData.address = req.body.user.address;
     userData.city = req.body.user.city;
     userData.pincode = req.body.user.pincode;
@@ -419,9 +425,7 @@ var addUserProcess = function(user, cart, callback) {
                 addUserProduct(user.id, cart, function(respone){
                     if(respone) {
                         callback({
-                            status: 200,
-                            data: respone,
-                            message: 'Your order has been placed successfully.'
+                            userID: user.id,
                         });
                     } else {
                         callback({
@@ -497,4 +501,5 @@ var sendEmailUser = function(user, callback) {
         }
     });
 };
+
 

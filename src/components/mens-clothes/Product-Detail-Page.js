@@ -5,6 +5,7 @@ import * as productAction from '../../actions/productAction';
 import Header from '../header/Header.js';
 import Footer from '../footer/Footer.js';
 import { Redirect } from 'react-router';
+import toastr from 'toastr';
 
 class ProductDetailPage extends Component {
   constructor(props, context) {
@@ -22,24 +23,31 @@ class ProductDetailPage extends Component {
       cart:{
         productId: '',
         userId: '',
-        price:''
+        price:'',
+        size:''
       },
       navigate: false,
+      isActive : false
     };
     this.addToCart = this.addToCart.bind(this);
   }
 
   addToCart() {
-    var cart = this.state.cart;
-    cart.price= this.state.productInfo.productPrice;
-    cart.quantity =1;
-    this.setState({cart: cart});
-    this.props.actions.addToCart(this.state.cart).then(response=>{
-      console.log("response---", response);
-      if(response.status === 200) {
-        this.setState({navigate: true});
-      }
-    });
+    if(this.state.cart.size == '') {
+      toastr.error("Please select size");
+    } else {
+      var cart = this.state.cart;
+      cart.price= this.state.productInfo.productPrice;
+      cart.quantity =1;
+      this.setState({cart: cart});
+      this.props.actions.addToCart(this.state.cart).then(response=>{
+        console.log("response---", response);
+        if(response.status === 200) {
+          this.setState({navigate: true});
+        }
+      });
+    }
+    
   }
 
   componentWillMount() {
@@ -52,7 +60,6 @@ class ProductDetailPage extends Component {
         if(response.status === 200) {
           var productInfo = this.state.productInfo;
           productInfo.productName= response.data.Name;
-          console.log("productInfo.productName= response.data.Name;---", productInfo.productName= response.data.Name);
           productInfo.productPrice= response.data.Price;
           productInfo.productAvailability= response.data.Availability;
           productInfo.productImage= response.data.Product_Image;
@@ -61,6 +68,12 @@ class ProductDetailPage extends Component {
         }
       });
     }
+  }
+
+  getSize(size) {
+    var cart = this.state.cart;
+    cart.size = size;
+    this.setState({cart: cart});
   }
   
   render() {
@@ -99,17 +112,11 @@ class ProductDetailPage extends Component {
                   <p><strong>Brand:</strong> Impulsion</p>
                   <div className="product-options">
                     <ul className="size-option">
-                      <li><span className="text-uppercase">Size:</span></li>
-                      <li className="active"><a>S</a></li>
-                      <li><a>XL</a></li>
-                      <li><a>SL</a></li>
-                    </ul>
-                    <ul className="color-option">
-                      <li><span className="text-uppercase">Color:</span></li>
-                      <li className="active"><a style={{"backgroundColor":"#475984"}}></a></li>
-                      <li><a style={{"backgroundColor":"#8A2454"}}></a></li>
-                      <li><a style={{"backgroundColor":"#BF6989"}}></a></li>
-                      <li><a style={{"backgroundColor":"#9A54D8"}}></a></li>
+                      <li><span>Size:</span></li>
+                      <li className={this.state.cart.size == 'S'? 'active':''}><a onClick={()=>this.getSize('S')}>S</a></li>
+                      <li className={this.state.cart.size == 'M'? 'active':''}><a onClick={()=>this.getSize('M')}>M</a></li>
+                      <li className={this.state.cart.size == 'L'? 'active':''}><a onClick={()=>this.getSize('L')}>L</a></li>
+                      <li className={this.state.cart.size == 'XL'? 'active':''}><a onClick={()=>this.getSize('XL')}>XL</a></li>
                     </ul>
                   </div>
                   <div className="product-btns">
