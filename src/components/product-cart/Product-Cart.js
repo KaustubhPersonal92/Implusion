@@ -32,18 +32,15 @@ class ProductCart extends Component {
       },
       userLoggedIn: false,
       navigate: false,
+      hideCartIcon:true
     }
-    this.addUser = this.addUser.bind(this);
+    this.getUserProfile();
     this.deleteCart = this.deleteCart.bind(this);
     this.updateCart = this.updateCart.bind(this);
     this.decreaseQuantity = this.decreaseQuantity.bind(this);
   }
 
   componentWillMount() {
-    if(localStorage.getItem("user_id")) {
-      var id = localStorage.getItem("user_id");
-      this.getUserProfile(id);
-    }
     this.getCartList();
     this.orderSummaryList();
   }
@@ -109,24 +106,8 @@ class ProductCart extends Component {
     });
   }
 
-  addUser() {
-    var userProduct ={
-      "user": this.state.userObject,
-      "cart": this.state.cart
-    };
-    this.props.actions.addUser(userProduct).then(response=>{
-      if(response.status === 200) {
-        const $ = window.$;
-        $('.login-register-form').modal('hide');
-        this.getUserProfile(response.data.userID);
-      } else {
-        toastr.error(response.message);
-      }
-    });
-  }
-
-  getUserProfile(data) {
-    this.props.actions.getUserProfile(data).then(response=>{
+  getUserProfile() {
+    this.props.actions.getUserProfileAction().then(response=>{
       if(response.status === 200) {
         var userProfile = this.state.userProfile;
         this.setState({userProfile:response.data})
@@ -135,9 +116,6 @@ class ProductCart extends Component {
       }
     });
   }
-
-  
-
 
   render() {
     const { navigate } = this.state
@@ -149,6 +127,7 @@ class ProductCart extends Component {
         <Header
           user={this.state.userProfile}
           userLoggedIn = {this.state.userLoggedIn}
+          hideCartIcon = {this.state.hideCartIcon}
         />
         <div className="section">
           <div className="container">
@@ -176,11 +155,11 @@ class ProductCart extends Component {
                         <span>Continue Shopping</span>
                       </button>
                     </Link>
-                    <a href="#" data-toggle="modal" data-target=".login-register-form">
+                    <Link to="checkout">
                       <button className="_2AkmmA _14O7kc _7UHT_c">
                         <span> Place Order</span>
                       </button>
-                    </a>
+                    </Link>      
                   </div>
                 </div>
               }

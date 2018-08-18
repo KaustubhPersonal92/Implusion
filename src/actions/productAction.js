@@ -91,9 +91,9 @@ export function addUser(data) {
   };
 }
 
-export function getUserProfileAction(userToken) {
+export function getUserProfileAction() {
   return function (dispatch, getState) {
-    return ProductApi.getUserProfileApi(userToken).then(response => {
+    return ProductApi.getUserProfileApi().then(response => {
       return response;
     }).catch(error => {
       console.log(error)

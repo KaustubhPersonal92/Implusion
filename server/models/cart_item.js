@@ -8,10 +8,13 @@ module.exports = function(sequelize, DataTypes) {
                 primaryKey: true
             },
             productId: DataTypes.STRING,
-            quantity: DataTypes.STRING,
-            createdDate: DataTypes.STRING,
-            shoppingCartId: DataTypes.STRING,
             price: DataTypes.STRING,
+            quantity: DataTypes.STRING,
+            shoppingCartId: DataTypes.STRING,
+            total: DataTypes.STRING,
+            size: DataTypes.STRING,
+            color: DataTypes.STRING,
+            createdDate: DataTypes.STRING
         }, 
         {
             freezeTableName: true,

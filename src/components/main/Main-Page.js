@@ -5,10 +5,17 @@ import MensClothes from '../mens-clothes/Mens-Clothes.js';
 import Footer from '../footer/Footer.js';
 
 class MainPage extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state={
+      hideCartIcon:false
+    }
+  }
+
   render() {
     return (
       <div>
-        <Header/>
+        <Header hideCartIcon={this.state.hideCartIcon}/>
         <Slider/>
         <MensClothes/>
         <Footer/>

@@ -27,7 +27,8 @@ class ProductDetailPage extends Component {
         size:''
       },
       navigate: false,
-      isActive : false
+      isActive : false,
+      hideCartIcon:false
     };
     this.addToCart = this.addToCart.bind(this);
   }
@@ -51,6 +52,7 @@ class ProductDetailPage extends Component {
   }
 
   componentWillMount() {
+    this.getUserProfile();
     var cart = this.state.cart;
     cart.productId = this.props.match.params.id
     var productId = this.props.match.params.id 
@@ -75,6 +77,17 @@ class ProductDetailPage extends Component {
     cart.size = size;
     this.setState({cart: cart});
   }
+
+  getUserProfile() {
+    this.props.actions.getUserProfileAction().then(response=>{
+      if(response.status === 200) {
+        var userProfile = this.state.userProfile;
+        this.setState({userProfile:response.data})
+      } else {
+        toastr.error(response.message);
+      }
+    });
+  }
   
   render() {
     var productImage= '';
@@ -91,7 +104,10 @@ class ProductDetailPage extends Component {
     }
     return (
       <div>
-        <Header addToCartCounter={this.state.addToCartCounter}/>
+        <Header 
+          addToCartCounter={this.state.addToCartCounter}
+          hideCartIcon= {this.state.hideCartIcon} 
+        />
         <div className="section">
           <div className="container">
             <div className="row">

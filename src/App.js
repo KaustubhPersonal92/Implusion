@@ -8,6 +8,8 @@ import Checkout from './components/checkout/Checkout';
 import ProductCart from './components/product-cart/Product-Cart';
 import Test from './components/checkout/test'; 
 import LoginPage from './components/login/Login-Page';
+import CheckoutSummary from './components/checkout-summary/Checkout-Summary';
+import Payment from './components/payment/Payment';
 class App extends Component {
   render() {
     return (
@@ -19,6 +21,8 @@ class App extends Component {
           <Route exact name="index" path="/viewcart" component={ProductCart}/>
           <Route exact name="index" path="/test" component={Test}/>
           <Route exact name="index" path="/login" component={LoginPage}/>
+          <Route exact name="index" path="/checkout/summary" component={CheckoutSummary}/>
+          <Route exact name="index" path="/checkout/payment" component={Payment}/>
         </div>
       </Router>
     );

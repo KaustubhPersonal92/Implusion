@@ -1,15 +1,5 @@
 import axios from 'axios';
 
-var userToken = "Bearer "+ localStorage.getItem("user_token");
-var config = {
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': userToken
-  }
-};
-
-
-
 class ProductApi {
   static getProductImagesApi() {
     return new Promise((resolve, reject) => {
@@ -122,6 +112,13 @@ class ProductApi {
   }
 
   static getUserProfileApi() {
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    };
     return new Promise((resolve, reject) => {
       axios.get("http://localhost:8080/api/user/getUserProfile/", config).then(function(response) {
         if(response.data.status === 200) {

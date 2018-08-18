@@ -94,24 +94,33 @@ exports.addToCartProduct = function(req, res) {
             cartItem.quantity = req.body.quantity;
             cartItem.shoppingCartId = productData.id;
             cartItem.price = req.body.price;
+            cartItem.quantity = req.body.quantity;
+            cartItem.total = req.body.price * req.body.quantity;
+            cartItem.size = req.body.size;
+            cartItem.color = '';
             db.models.cart_item.create(cartItem).then(function (respone) {
                 if(respone){
-                    orderDetail(req.body.productId, req.body.price, req.body.quantity, req.body.size, 'Yellow', function(orderResponse){
-                        if(orderResponse){
-                            res.json({
-                                status: 200,
-                                data: orderResponse,
-                                message: 'Product added into cart successfully.'
-                            });    
-                        } else {
-                            res.json({
-                                status: 401,
-                                data: [],
-                                message: 'Failed to add product in cart.'
-                            });
-                        }
+                    res.json({
+                        status: 200,
+                        data: respone,
+                        message: 'Product added into cart successfully.'
+                    }); 
+                    // orderDetail(req.body.productId, req.body.price, req.body.quantity, req.body.size, 'Yellow', function(orderResponse){
+                    //     if(orderResponse){
+                    //         res.json({
+                    //             status: 200,
+                    //             data: orderResponse,
+                    //             message: 'Product added into cart successfully.'
+                    //         });    
+                    //     } else {
+                    //         res.json({
+                    //             status: 401,
+                    //             data: [],
+                    //             message: 'Failed to add product in cart.'
+                    //         });
+                    //     }
                                 
-                    })
+                    // })
                 } else {
                     res.json({
                         status: 401,
@@ -146,10 +155,7 @@ exports.getCartDetail = function(req, res) {
         include: [{
             model: db.models.cart_item,
             include:[{
-                model: db.models.products,
-                include:[{
-                    model:db.models.order_details,
-                }]
+                model: db.models.products
             }]
         }]
     }).then(function (productData){
@@ -167,7 +173,8 @@ exports.getCartDetail = function(req, res) {
                             "productImage": productData[item].dataValues.cart_items[i].product.dataValues.Product_Image,
                             "productQuantity": productData[item].dataValues.cart_items[i].quantity,
                             "product_id": productData[item].dataValues.cart_items[i].productId,
-                            "productSize": productData[item].dataValues.cart_items[i].product.dataValues.order_details[i].size
+                            "productSize": productData[item].dataValues.cart_items[i].size,
+                            "productTotal": productData[item].dataValues.cart_items[i].total
                         }
                         trialListArray.push(trialList);
                     }
@@ -257,7 +264,6 @@ exports.deleteCart = function(req, res) {
 */
 
 exports.updateCartProduct = function(req, res) {
-    console.log("Request come for update1", req.params);
     db.models.products.findOne({
         where:{
             id: req.body.product_id
@@ -267,67 +273,66 @@ exports.updateCartProduct = function(req, res) {
             var cartData = {};
             cartData.quantity = req.body.productQuantity;
             cartData.price = req.body.productQuantity * data.dataValues.Price;
+            cartData.total = req.body.productQuantity * data.dataValues.Price;
             db.models.cart_item.update(cartData, {
                 where:{
                     shoppingCartId: req.params.shoppingId
                 }
             }).then(function(productData) {
-                updateOrderDetail(req.body.product_id, cartData.price, cartData.quantity, function(respone){
-                    if(respone){
-                        res.json({
-                            status: 200,
-                            data: [],
-                            message: 'Product quantity updated successfully.'
-                        });    
-                    } else {
-                        res.json({
-                            status: 401,
-                            data: [],
-                            message: 'Failed to update product quantity.'
-                        });
-                    }
-                })
+                if(productData){
+                    res.json({
+                        status: 200,
+                        data: [],
+                        message: 'Product quantity updated successfully.'
+                    });    
+                } else {
+                    res.json({
+                        status: 401,
+                        data: [],
+                        message: 'Failed to update product quantity.'
+                    });
+                }
             });         
         }
     })
 };
 
-var orderDetail = function(product_id, product_price, product_quantity, product_size, product_color, callback) {
-    var orderDetail = {};
-    orderDetail.product_id = product_id;
-    orderDetail.price = product_price;
-    orderDetail.quantity = product_quantity;
-    orderDetail.total = product_price * product_quantity;
-    orderDetail.size = product_size;
-    orderDetail.color = product_color;
-    db.models.order_details.create(orderDetail).then(function(data) {
-        if(data) {
-            callback(data); 
-        } else {
-            callback(null);
-        }
-    });
-};
+// var orderDetail = function(product_id, product_price, product_quantity, product_size, product_color, callback) {
+//     var orderDetail = {};
+//     orderDetail.product_id = product_id;
+//     orderDetail.price = product_price;
+//     orderDetail.quantity = product_quantity;
+//     orderDetail.total = product_price * product_quantity;
+//     orderDetail.size = product_size;
+//     orderDetail.color = product_color;
+//     db.models.order_details.create(orderDetail).then(function(data) {
+//         if(data) {
+//             callback(data); 
+//         } else {
+//             callback(null);
+//         }
+//     });
+// };
 
-var updateOrderDetail = function(product_id, product_price, product_quantity, callback) {
-    var updateOrder = {};
-    updateOrder.price = product_price;
-    updateOrder.quantity = product_quantity;
-    updateOrder.total = product_price;
-    console.log("updateOrder----", updateOrder);
-    console.log("product_id----", product_id);
-    db.models.order_details.update(updateOrder,{
-        where:{
-            product_id:product_id
-        }
-    }).then(function(data) {
-        if(data) {
-            callback(data); 
-        } else {
-            callback(null);
-        }
-    });
-};
+// var updateOrderDetail = function(product_id, product_price, product_quantity, callback) {
+//     var updateOrder = {};
+//     updateOrder.price = product_price;
+//     updateOrder.quantity = product_quantity;
+//     updateOrder.total = product_price;
+//     console.log("updateOrder----", updateOrder);
+//     console.log("product_id----", product_id);
+//     db.models.order_details.update(updateOrder,{
+//         where:{
+//             product_id:product_id
+//         }
+//     }).then(function(data) {
+//         if(data) {
+//             callback(data); 
+//         } else {
+//             callback(null);
+//         }
+//     });
+// };
 
 /**
  * Author Kaustubh Mishra
@@ -340,7 +345,7 @@ var updateOrderDetail = function(product_id, product_price, product_quantity, ca
 
 exports.getCartSummary = function(req, res) {
 
-    db.query("SELECT  SUM(total) AS TOTAL FROM order_details",
+    db.query("SELECT  SUM(total) AS TOTAL FROM cart_item",
     {
       type: sequelizeDb.QueryTypes.SELECT
     }).then(function(orderData){

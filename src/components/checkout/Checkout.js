@@ -7,6 +7,7 @@ import {bindActionCreators} from 'redux';
 import toastr from 'toastr';
 import Footer from '../footer/Footer';
 import lodash from 'lodash';
+import { Redirect } from 'react-router';
 
 class Checkout extends Component {
 	constructor(props, context) {
@@ -25,6 +26,7 @@ class Checkout extends Component {
 	    };
 	    this.addUser = this.addUser.bind(this);
 	    this.updateUserState = this.updateUserState.bind(this);
+	    this.selectUserAddress = this.selectUserAddress.bind(this);
 	    this.getCartList();
 	}
 
@@ -68,7 +70,15 @@ class Checkout extends Component {
   		}
   	}
 
+  	selectUserAddress() {
+  		this.setState({navigate:true});
+  	}
+
   	render() {
+  		const { navigate } = this.state
+	    if (navigate) {
+	      return <Redirect to='/checkout/summary/' push={true} />
+	    }
     	return (
 		<div>
 			<Header/>
@@ -108,7 +118,7 @@ class Checkout extends Component {
 											<span className="success" style={{"fontSize": "12px"}}>
 												Edit
 											</span>
-											<span className="_ol"></span>
+											<a className="_ol" onClick={this.selectUserAddress}></a>
 										</div>
 									</div>
 								</div>
