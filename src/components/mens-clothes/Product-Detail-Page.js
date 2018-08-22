@@ -122,7 +122,7 @@ class ProductDetailPage extends Component {
                 <div className="col-md-6">
                   <div className="product-body">
                     <h4 className="product-name">Impulsion {this.state.productInfo.productName} T-shirt</h4>
-                    <h4 className="product-price"><i className="fa fa-inr"> {this.state.productInfo.productPrice}</i></h4>
+                    <h4 className="product-price"><i className="fa fa-inr" style={{"fontSize": "18px"}}> {this.state.productInfo.productPrice}</i></h4>
                   </div>
                   <p><strong>Availability:</strong> {this.state.productInfo.productAvailability}</p>
                   <p><strong>Brand:</strong> Impulsion</p>

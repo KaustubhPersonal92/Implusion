@@ -28,9 +28,9 @@ class Payment extends Component {
                                           <span className="col-xs-4 hidden-xs" style={{"textAlign": "right"}}>
                                                 <span style={{"fontSize": "12px"}}>Total Payable<br/>
                                                       <span style={{"fontSize": "12px"}}>
-                                                            <i className="icon_rupee" style={{"fontSize": "12px", "marginRight": "3px"}}></i>
+                                                            <i className="fa fa-inr" style={{"fontSize": "17px"}}></i>
                                                       </span>
-                                                      <b style={{"fontFamily": "montserrat-bold", "fontSize": "20px"}}>799</b>
+                                                      <b style={{"fontFamily": "montserrat-bold", "fontSize": "20px"}}> 799</b>
                                                 </span>
                                           </span>
                                     </div>
@@ -41,7 +41,7 @@ class Payment extends Component {
                                                             <div className="_cf">
                                                                   <h4 className="_cg">
                                                                         <div className=" _ch">Cash On Delivery 
-                                                                              <i className="icon_next" style={{"fontSize": "11px", "float": "right", "marginRight": "14px"}}></i>
+                                                                              <i className="fas fa-angle-right" style={{"fontSize": "15px", "float": "right", "marginRight": "14px"}}></i>
                                                                         </div>
                                                                   </h4>
                                                             </div>
@@ -61,30 +61,22 @@ class Payment extends Component {
                                                                               <div className="_cu">
                                                                                     Bag Total (Inclusive of all taxes)
                                                                                     <span className="pull-right">
-                                                                                          <i className="icon_rupee"></i>
-                                                                                          799
+                                                                                          <i className="fa fa-inr" style={{"fontSize": "12px"}}></i> 799
                                                                                     </span>
-                                                                              </div>
+                                                                              </div> 
                                                                               <div className="_cu">
                                                                                     Shipping Charges
                                                                                     <span className="pull-right">
-                                                                                          <p> FREE </p>
-                                                                                    </span>
-                                                                                    <br/>
-                                                                              </div>  
-                                                                              <div className="_cu">
-                                                                                    Cash Collection Charges
-                                                                                    <span className="pull-right">
-                                                                                          <p>+ <i className="icon_rupee"></i> 25</p>
+                                                                                          <p>+ <i className="fa fa-inr" style={{"fontSize": "12px"}}></i> 25</p>
                                                                                     </span>
                                                                               </div>
                                                                         </div>
                                                                         <hr style={{"height": "0px", "borderBottom": "1px solid rgb(238, 238, 238)"}}/>
-                                                                        <div style={{"fontFamily": "montserrat-bold", "fontSize": "16px"}}>
+                                                                        <div style={{"fontFamily": "montserrat-bold", "fontSize": "16px", "fontWeight": "bold"}}>
                                                                               Payable Amount
                                                                               <span className="pull-right">
-                                                                                    <i className="icon_rupee _cM"></i>
-                                                                                    <span>824</span>
+                                                                                    <i className="fa fa-inr _cM" style={{"fontSize": "12px"}}></i>
+                                                                                    <span> 824</span>
                                                                               </span>
                                                                         </div>
                                                                         <hr style={{"height": "0px", "borderBottom": "1px solid rgb(238, 238, 238)"}}/>

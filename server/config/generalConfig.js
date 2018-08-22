@@ -7,6 +7,6 @@ module.exports = {
         userResultSubject: emailTemplates.userResultSubject,
         usercredentailsEmailBody: emailTemplates.usercredentailsEmailBody,
         emailContainerHeaderString: emailTemplates.emailContainerHeaderString,
-        emailContainerFooterString: emailTemplates.emailContainerFooterString
-    },
+        emailContainerFooterString: emailTemplates.emailContainerFooterString,
+    }
 };

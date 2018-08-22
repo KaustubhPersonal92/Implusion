@@ -22,9 +22,17 @@ module.exports = function(app) {
 
     app.get('/api/user/getUserProfile/', verifyToken, userController.getloggedInUserProfile);
 
-    app.post('/api/user/addUser/', verifyToken, userController.addUserData);
+    app.post('/api/user/addUser/', userController.addUserData);
 
     app.post('/api/user/authenication/', userController.userLogin);
+
+    app.get('/api/user/address/', verifyToken, userController.getUserAddress);
+
+	app.post('/api/user/address/', verifyToken, userController.adduserAddress);
+	
+	app.get('/api/user/address/:addressId/:userId', verifyToken, userController.getUserAddressById);
+
+	app.put('/api/user/address/:id/', verifyToken, userController.updateUserAddress);
 
     
 

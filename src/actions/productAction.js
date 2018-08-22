@@ -42,7 +42,6 @@ export function addToCart(cartData) {
 export function getCartData() {
   return function (dispatch, getState) {
     return ProductApi.getCartInfoApi().then(response => {
-      console.log("response---", response)
       return response;
     }).catch(error => {
       console.log(error)
@@ -53,7 +52,6 @@ export function getCartData() {
 export function getOrderSummaryData() {
   return function (dispatch, getState) {
     return ProductApi.getOrderSummaryApi().then(response => {
-      console.log("response---", response)
       return response;
     }).catch(error => {
       console.log(error)
@@ -110,4 +108,55 @@ export function authentication(data) {
     });
   };
 }
+
+export function getUserAddressAction() {
+  return function (dispatch, getState) {
+    return ProductApi.getUserAddressApi().then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function getPincodeAction(pincode) {
+  return function (dispatch, getState) {
+    return ProductApi.getPincodeApi(pincode).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function addUserAddressAction(data) {
+  return function (dispatch, getState) {
+    return ProductApi.addUserAddressApi(data).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function getUserAddressByIdAction(addressId, userId) {
+  return function (dispatch, getState) {
+    return ProductApi.getUserAddressByIdActionApi(addressId, userId).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function updateUserAddressAction(data) {
+  return function (dispatch, getState) {
+    return ProductApi.updateUserAddressApi(data).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
 

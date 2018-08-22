@@ -13,17 +13,32 @@ class CheckoutSummary extends Component {
 	constructor(props, context) {
 	    super(props, context);
 	    this.state= {
-	    	navigate: false,
+			navigate: false,
+			selectedUserAddress:{}
 	    }
-	    this.redirectToPayment =this.redirectToPayment.bind(this);
+		this.redirectToPayment =this.redirectToPayment.bind(this);
 	}
 
 	componentWillMount() {
-		
+		if(this.props.match.params) {
+			var addressID = this.props.match.params.addressId;
+			var userID = this.props.match.params.userId;
+			this.getUserAddressById(addressID, userID)
+		}
 	}
 
 	redirectToPayment() {
 		this.setState({navigate:true});
+	}
+
+	getUserAddressById(addressId, userId) {
+		this.props.actions.getUserAddressByIdAction(addressId, userId).then(response=>{
+			if(response.status === 200) {
+				this.setState({selectedUserAddress:response.data})
+			} else {
+				toastr.error(response.message);
+			}
+	  	});
 	}
 
   	render() {
@@ -44,7 +59,7 @@ class CheckoutSummary extends Component {
       						<div className="_tO">
       							<span className="pull-left hidden-xs">My Bag<span style={{"fontSize": "12px", "opacity": "0.5"}}><br/>(1 item)</span></span>
       							<span className="pull-left visible-xs" style={{"fontFamily": "montserrat-regular", "fontSize": "16px"}}>(1 item)</span>
-      							<span className="pull-right" style={{"fontFamily": "montserrat-bold", "fontSize": "16px"}}><i className="icon_rupee" style={{"fontSize": "12px"}}></i>799</span>
+      							<span className="pull-right" style={{"fontFamily": "montserrat-bold", "fontSize": "16px"}}><i className="fa fa-inr" style={{"fontSize": "12px"}}></i> 799</span>
       						</div>
       						<div>
       							<div className="_tQ">
@@ -58,7 +73,7 @@ class CheckoutSummary extends Component {
       									<div>
       										<p className="_tR">Pine Green Mandarin Collar Pique Shirt</p>
       										<div className="_tS">
-      											<i className="icon_rupee" style={{"fontSize": "11px", "marginRight": "3px"}}></i>
+      											<i className="fa fa-inr" style={{"fontSize": "11px", "marginRight": "3px"}}></i>
       											799
       										</div>
       										<div className="col-xs-12 no-padding _tT">
@@ -77,7 +92,7 @@ class CheckoutSummary extends Component {
       									<div>
       										<p className="_tR">Pine Green Mandarin Collar Pique Shirt</p>
       										<div className="_tS">
-      											<i className="icon_rupee" style={{"fontSize": "11px", "marginRight": "3px"}}></i>
+      											<i className="fa fa-inr" style={{"fontSize": "11px", "marginRight": "3px"}}></i>
       											799
       										</div>
       										<div className="col-xs-12 no-padding _tT">
@@ -137,7 +152,7 @@ class CheckoutSummary extends Component {
 										Order Summary
 									</div>
 									<div className="_t5">Bag Total (Inclusive of all taxes)
-										<span className="pull-right"><i class="icon_rupee"></i>799</span>
+										<span className="pull-right"><i class="fa fa-inr"></i>799</span>
 									</div>
 									<div className="_t5">Shipping Charges
 										<span className="pull-right"><p> FREE </p></span><br/>
@@ -147,7 +162,7 @@ class CheckoutSummary extends Component {
 								<div style={{"fontFamily": "montserrat-bold", "fontSize": "16px"}}>
 									Payable Amount
 									<span className="pull-right">
-										<i className="icon_rupee"></i>
+										<i className="fa fa-inr"></i>
 										<span>799</span>
 									</span>
 								</div>
@@ -160,14 +175,13 @@ class CheckoutSummary extends Component {
 								<div className="_ua hidden-xs">
 									<span style={{"float": "left", "width": "100%", "opacity": "0.7"}}>Delivery Address</span><br/>
 									<div id="addressName" style={{"margin": "25px auto 5px"}}> 
-										Kaustubh Mishra 
+										{this.state.selectedUserAddress.reciever_name} 
 									</div>
 									<div className="text-grayed-12">
-										411, SQUATS Fitness Pvt Ltd 4th floor,Platinum Square
-										Next to Hayatt hotel,Above Sriniwas veg restaurant.<br/> 
-										Opposite WNS Company, Viman Nagar,Pune.<br/> 
-										Pune 411014<br/> Maharashtra India<br/>
-										<div>Mobile No. 7007825959 </div>
+										{this.state.selectedUserAddress.address} {this.state.selectedUserAddress.locality}<br/> 
+										{this.state.selectedUserAddress.landmark}<br/> 
+										{this.state.selectedUserAddress.city} {this.state.selectedUserAddress.pincode}<br/> {this.state.selectedUserAddress.state} {this.state.selectedUserAddress.country}<br/>
+										<div>Mobile No. {this.state.selectedUserAddress.contact_number} </div>
 									</div>
 									<br/>
 									<Link className="success" to="/checkout">Change</Link>

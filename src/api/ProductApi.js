@@ -143,6 +143,107 @@ class ProductApi {
       })
     });
   }
+
+  static getUserAddressApi() {
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    };
+    return new Promise((resolve, reject) => {
+      axios.get("http://localhost:8080/api/user/address/", config).then(function(response) {
+        if(response.data.status === 200) {
+          resolve(response.data);
+        }
+        else {
+          resolve(response.data);
+        }
+      })
+    });
+  }
+
+  static getPincodeApi(pincode) {
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    };
+    return new Promise((resolve, reject) => {
+      axios.get("http://postalpincode.in/api/pincode/"+pincode).then(function(response) {
+        if(response.data.status === 200) {
+          resolve(response);
+        }
+        else {
+          resolve(response.data);
+        }
+      })
+    });
+  }
+
+  static addUserAddressApi(data) {
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    };
+    return new Promise((resolve, reject) => {
+      axios.post("http://localhost:8080/api/user/address/", data, config).then(function(response) {
+        if(response.data.status === 200) {
+          resolve(response.data);
+        }
+        else {
+          resolve(response.data);
+        }
+      })
+    });
+  }
+
+  static getUserAddressByIdActionApi(addresId, userId) {
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    };
+    return new Promise((resolve, reject) => {
+      axios.get("http://localhost:8080/api/user/address/"+addresId + "/" +userId, config).then(function(response) {
+        if(response.data.status === 200) {
+          resolve(response.data);
+        }
+        else {
+          resolve(response.data);
+        }
+      })
+    });
+  }
+
+  static updateUserAddressApi(data) {
+    console.log("data---", data)
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    };
+    return new Promise((resolve, reject) => {
+      axios.put("http://localhost:8080/api/user/address/"+data.id, data, config).then(function(response) {
+        if(response.data.status === 200) {
+          resolve(response.data);
+        }
+        else {
+          resolve(response.data);
+        }
+      })
+    });
+  }
   
 }
 

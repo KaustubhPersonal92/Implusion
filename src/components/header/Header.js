@@ -5,6 +5,10 @@ import * as productAction from '../../actions/productAction';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import lodash from 'lodash';
+import { Redirect } from 'react-router';
+import TextInput from '../common/TextInput';
+import validateInput from '../common/validations/addUserValidation';
+import validateLoginInput from '../common/validations/loginValidation';
 
 class Header extends Component {
   constructor(props, context) {
@@ -15,16 +19,48 @@ class Header extends Component {
         "email":'',
         "password":''
       },
+      userObject:{
+        "firstName": '',
+        "lastName": '',
+        "email": '',
+        "password": '',
+        "number":'',
+        "gender":''
+      },
+      errors: {},
       userLoggedIn: false,
+      navigate: false,
+      isActive : false,
     }
     this.updateUserState = this.updateUserState.bind(this);
     this.updateAuthState = this.updateAuthState.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
+    this.addUser = this.addUser.bind(this);
   }
 
   componentWillMount() {
     this.getUserProfile();
+  }
+
+  isValidAuth() {
+    const { errors, isValid } = validateLoginInput(this.state.auth);
+
+    if (!isValid) {
+      this.setState({ errors });
+    }
+
+    return isValid;
+  }
+
+  isValidUser() {
+    const { errors, isValid } = validateInput(this.state.userObject);
+
+    if (!isValid) {
+      this.setState({ errors });
+    }
+
+    return isValid;
   }
 
   updateUserState(event) {
@@ -42,17 +78,21 @@ class Header extends Component {
   }
 
   login() {
-    this.props.actions.authentication(this.state.auth).then(response=>{
-      if(response.status === 200) {
-        const $ = window.$;
-        $('.login-register-form').modal('hide');
-        localStorage.setItem("user_token", response.data);
-        this.getUserProfile();
-      } else {
-        toastr.error(response.message);
-        this.setState({userProfile:[]})
-      }
-    });
+    if(this.isValidAuth()) {
+      this.setState({ errors: {} });
+      this.props.actions.authentication(this.state.auth).then(response=>{
+        if(response.status === 200) {
+          const $ = window.$;
+          $('.login-register-form').modal('hide');
+          localStorage.setItem("user_token", response.data);
+          window.location.reload()
+          this.getUserProfile();
+        } else {
+          toastr.error(response.message);
+          this.setState({userProfile:[]})
+        }
+      });
+    }
   }
 
   getUserProfile() {
@@ -68,11 +108,42 @@ class Header extends Component {
 
   logout() {
     localStorage.removeItem("user_token");
-    this.setState({userProfile:[]});
+    this.setState({userProfile:[], navigate: true});
+  }
+
+  setGender(gender) {
+    let user = this.state.userObject;
+    user.gender= gender;
+    this.setState({user: user});
+  }
+
+
+  addUser() {
+    if(this.isValidUser()) {
+      this.setState({ errors: {} });
+      var userProduct ={
+        "user": this.state.userObject,
+        "cart": this.state.cart
+      };
+      this.props.actions.addUser(userProduct).then(response=>{
+        if(response.status === 200) {
+          toastr.success(response.message);
+          const $ = window.$;
+          $('.login-register-form').modal('hide');
+        } else {
+          toastr.error(response.message);
+        }
+      });
+    } else {
+    }
   }
 
   render() {
     const that = this.state
+    const { navigate } = this.state
+    if (navigate) {
+      return <Redirect to='/' push={true} />
+    }
     return (
       <header className="CGBNf7 _1tYwJP">
         <div className="_1tz-RS">
@@ -117,7 +188,7 @@ class Header extends Component {
                       <li className="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">My Account <span className="caret"></span></a>
                         <ul className="dropdown-menu">
                           <li><a>< i className="far fa-user"></i> My Profile</a></li>
-                          <li><a><i className="fas fa-folder"></i> Orders</a></li>
+                          <li><Link to="/myaccount/orders"><i className="fas fa-folder"></i> My Orders</Link></li>
                           <li><a onClick={this.logout}><i className="glyphicon glyphicon-off"></i> Logout</a></li>
                         </ul>
                       </li>
@@ -150,7 +221,7 @@ class Header extends Component {
         <div className="container">
           <div className="row">
             <div className="modal fade login-register-form" role="dialog">
-              <div className="modal-dialog modal-sm">
+              <div className="modal-dialog" style={{"maxWidth": "400px"}}>
                 <div className="modal-content">
                   <div className="modal-header">
                     <button type="button" className="close" data-dismiss="modal">
@@ -168,40 +239,97 @@ class Header extends Component {
                   <div className="modal-body">
                     <div className="tab-content">
                       <div id="login-form" className="tab-pane fade in active">
-                        <div className="form-group">
-                          <input type="email" className="form-control" onChange={this.updateAuthState} placeholder="Enter email" name="email"/>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <TextInput
+                              name="email"
+                              value={this.state.auth.email}
+                              onChange={this.updateAuthState}
+                              error={this.state.errors.email}
+                              type="text"
+                              placeholder="Enter email"
+                            /> 
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <input type="password" className="form-control" onChange={this.updateAuthState} placeholder="Enter password" name="password"/>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <TextInput
+                              name="password"
+                              value={this.state.auth.password}
+                              onChange={this.updateAuthState}
+                              error={this.state.errors.password}
+                              type="password"
+                              placeholder="Enter password"
+                            /> 
+                          </div>
                         </div>
-                        <button  className="btn btn-default" onClick={this.login}>Login</button>
+                        <button  className="_lP" onClick={this.login}>Login</button>
                       </div>
                       <div id="registration-form" className="tab-pane fade">
-                        <div className="form-group">
-                          <input className="input" type="text" name="firstName" placeholder="First Name" onChange={this.updateUserState} required/>
+                        <div className="row">
+                          <div className="col-md-6">
+                            <TextInput
+                              name="firstName"
+                              value={this.state.userObject.firstName}
+                              onChange={this.updateUserState}
+                              error={this.state.errors.firstName}
+                              type="text"
+                              placeholder="First Name"
+                            /> 
+                          </div>
+                          <div className="col-md-6">
+                            <TextInput
+                              name="lastName"
+                              value={this.state.userObject.lastName}
+                              onChange={this.updateUserState}
+                              error={this.state.errors.lastName}
+                              type="text"
+                              placeholder="Last Name"
+                            /> 
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <input className="input" type="text" name="lastName" placeholder="Last Name" onChange={this.updateUserState} required/>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <TextInput
+                              name="email"
+                              value={this.state.userObject.email}
+                              onChange={this.updateUserState}
+                              error={this.state.errors.email}
+                              type="email"
+                              placeholder="Email"
+                            /> 
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <input className="input" type="email" name="email" placeholder="Email" onChange={this.updateUserState} required/>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <TextInput
+                              name="password"
+                              value={this.state.userObject.password}
+                              onChange={this.updateUserState}
+                              error={this.state.errors.password}
+                              type="password"
+                              placeholder="Password"
+                            /> 
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <input className="input" type="text" name="address" placeholder="Address" onChange={this.updateUserState} required/>
+                        <div className="row">
+                          <div className="col-md-12">
+                            <TextInput
+                              name="number"
+                              value={this.state.userObject.number}
+                              onChange={this.updateUserState}
+                              error={this.state.errors.number}
+                              type="text"
+                              placeholder="Mobile"
+                            /> 
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <input className="input" type="text" name="city" placeholder="City" onChange={this.updateUserState} required/>
+                        <div style={{"margin": "0px auto 50px"}}>
+                          <span style={{"float": "left", "paddingTop": "5px", "color": "rgb(24, 24, 24)", "opacity": "0.5"}}>Gender</span>
+                          <span className={this.state.userObject.gender == 'Female'? 'active genderBtn':'genderBtn'} onClick={()=>this.setGender('Female')}>Female</span>
+                          <span className={this.state.userObject.gender == 'Male'? 'active genderBtn':'genderBtn'} onClick={()=>this.setGender('Male')}>Male</span>
                         </div>
-                        <div className="form-group">
-                          <input className="input" type="text" name="country" placeholder="Country" onChange={this.updateUserState} required/>
-                        </div>
-                        <div className="form-group">
-                          <input className="input" type="text" name="pincode" placeholder="Pin Code" onChange={this.updateUserState} required/>
-                        </div>
-                        <div className="form-group">
-                          <input className="input" type="tel" name="contactNumber" placeholder="Contact Number" onChange={this.updateUserState} required/>
-                        </div>
-                        <button onClick={this.addUser} className="btn btn-default">Register</button>
+                        <button onClick={this.addUser} className="_lP">Sign Up</button>
                       </div>
                     </div>
                   </div>

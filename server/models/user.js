@@ -9,13 +9,10 @@ module.exports = function(sequelize, DataTypes) {
             },
             firstName: DataTypes.STRING,
             lastName: DataTypes.STRING,
-            email: DataTypes.STRING,
             password: DataTypes.STRING,
-            address: DataTypes.STRING,
-            city: DataTypes.STRING,
-            pincode: DataTypes.STRING,
+            email: DataTypes.STRING,
             contactNumber: DataTypes.STRING,
-            country: DataTypes.STRING,
+            gender: DataTypes.STRING
         }, 
         {
             freezeTableName: true,

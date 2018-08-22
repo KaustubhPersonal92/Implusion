@@ -13,25 +13,16 @@ class Checkout extends Component {
 	constructor(props, context) {
 	    super(props, context);
 	    this.state={
-	      userObject:{
-	        "firstName": '',
-	        "lastName": '',
-	        "email": '',
-	        "address": '',
-	        "city": '',
-	        "pincode": '',
-	        "contactNumber":''
-	      },
 	      navigate: false,
+		  userAddress:[],
+		  userID:'',
+		  addressID:''
 	    };
-	    this.addUser = this.addUser.bind(this);
-	    this.updateUserState = this.updateUserState.bind(this);
 	    this.selectUserAddress = this.selectUserAddress.bind(this);
-	    this.getCartList();
 	}
 
 	componentWillMount() {
-		
+		this.getUserAddress();
 	}
 
   	updateUserState(event) {
@@ -40,97 +31,81 @@ class Checkout extends Component {
 	    user[field] = event.target.value;
 	    return this.setState({userObject: user});
   	}
-  	getCartList() {
-	    this.props.actions.getCartData().then(response=>{
+
+  	selectUserAddress(addressId, userId) {
+		this.setState({navigate:true, userID:userId, addressID:addressId});
+		console.log("this0s0s", this.state)
+  	}
+
+  	getUserAddress() {
+  		this.props.actions.getUserAddressAction().then(response=>{
 	      if(response.status === 200) {
-	        this.setState({cart: response.data});
+	      	this.setState({userAddress:response.data})
 	      } else {
-	        this.setState({cart: []});
+	        toastr.error(response.message);
 	      }
 	    });
-  	}
-
-  	addUser() {
-  		if(this.state.userObject.firstName != '') {
-  			var userProduct ={
-	  			"user": this.state.userObject,
-	  			"cart": this.state.cart
-  			};
-	  		this.props.actions.addUser(userProduct).then(response=>{
-	  			if(response.status === 200) {
-	  				
-					// const $ = window.$;
-					// $('#myModal').modal('show');
-				} else {
-					toastr.error(response.message);
-				}
-		    });
-  		} else {
-  			toastr.error("Please fill the field");
-  		}
-  	}
-
-  	selectUserAddress() {
-  		this.setState({navigate:true});
   	}
 
   	render() {
   		const { navigate } = this.state
 	    if (navigate) {
-	      return <Redirect to='/checkout/summary/' push={true} />
+	      return <Redirect to={'/checkout/summary/'+ this.state.addressID + '/' + this.state.userID} push={true} />
 	    }
     	return (
 		<div>
 			<Header/>
-      		<div className="section">
-				<div className="container">
-					<div className="_n9 col-xs-12">
-						<div className="_oy">
-							<div className="col-xs-12 hidden-xs" style={{"fontSize": "20px"}}>
-								Select Delivery Address
-								<br/>
-								<br/>
-							</div>
+      		<div className="_q">
+				<div className="_r col-xs-12">
+					<div className="_R">
+						<div className="col-xs-12 hidden-xs" style={{"fontSize": "20px"}}>
+							Select Delivery Address
+							<br/>
+							<br/>
+						</div>
+						{
+							this.state.userAddress.map(useraddress=>
 							<div className="col-xs-12 col-sm-6 noPdXs">
-								<div className="_oa _ob _og _oj" style={{"padding": "10px 0px"}}>
-									<div className="_oc col-xs-11">
-										<h3 className="_on">
+								<div className="_t _u _z _C">
+									<div className="_v col-xs-11">
+										<h3 className="_G">
 											<br/>
-											<div className="_op">Kaustubh</div>
+											<div className="_I">{useraddress.reciever_name}</div>
 										</h3>
 										<div className="text-grayed-12">
 											<div style={{"margin": "5px auto 10px"}}>
-												<div className="_or">
-													411, SQUATS Fitness Pvt Ltd 4th floor,Platinum Square
-													Next to Hayatt hotel,Above Sriniwas veg restaurant.
+												<div className="_K">
+													{useraddress.address} {useraddress.locality}
 													<br/>
 												</div>
 												<div>
-													Pincode:
+													Pincode: {useraddress.pincode}
 													<br/>
 												</div>
 												<div>
-													Pincode:
+													Mobile No: {useraddress.contact_number}
 												</div>
 											</div>
 										</div>
 										<div>
 											<span className="success" style={{"fontSize": "12px"}}>
-												Edit
+												<Link to={'checkout/updateAddress/' + useraddress.id + '/' + useraddress.user_id}>Edit</Link>
 											</span>
-											<a className="_ol" onClick={this.selectUserAddress}></a>
+											<a className="_E" onClick={()=>this.selectUserAddress(useraddress.id, useraddress.user_id)}></a>
 										</div>
 									</div>
 								</div>
 								<br/>
 								<br/>
 							</div>
-							<div className="col-xs-12 col-sm-6 noPdXs success text-center hidden-xs">
-								<div className="_oa _ob _og _oj" style={{"padding": "45px 0px", "fontFamily": "montserrat-regular"}}>
-									<div className="_oc col-xs-12">
+						)}
+						<div className="col-xs-12 col-sm-6 noPdXs success text-center hidden-xs">
+							<div className="_t _u _z _C" style={{"padding": "47px 0px", "fontFamily": "montserrat-regular"}}>
+								<div className="_v col-xs-12">
+									<Link to="/checkout/newAddress">
 										<span style={{"fontSize": "60px", "lineHeight": "0"}}>+</span>
 										<br/>ADD NEW ADDRESS
-									</div>
+									</Link>
 								</div>
 							</div>
 						</div>

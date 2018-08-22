@@ -32,7 +32,7 @@ class ProductCart extends Component {
       },
       userLoggedIn: false,
       navigate: false,
-      hideCartIcon:true
+      hideCartIcon:true,
     }
     this.getUserProfile();
     this.deleteCart = this.deleteCart.bind(this);
@@ -57,7 +57,6 @@ class ProductCart extends Component {
 
   orderSummaryList() {
     this.props.actions.getOrderSummaryData().then(response=>{
-      console.log("response---", response)
       if(response.status === 200) {
         this.setState({totalList: response.data});
       } else {
@@ -129,42 +128,66 @@ class ProductCart extends Component {
           userLoggedIn = {this.state.userLoggedIn}
           hideCartIcon = {this.state.hideCartIcon}
         />
+
         <div className="section">
           <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="order-summary clearfix">
-                  <div className="section-title">
-                    <h3 className="title">Order Review</h3>
-                  </div>
-                  <CartList 
-                    cartData = {this.state.cart}
-                    deleteCart={this.deleteCart}
-                    updateCart={this.updateCart}
-                    decreaseQuantity={this.decreaseQuantity}
-                    totalList={this.state.totalList}
-                  />
+            {
+              this.state.cart.length < 0 && 
+              <div className="_gP _gO" style={{"padding": "30px 0px 0px"}}>
+                <img src="https://images.bewakoof.com/images/doodles/empty-cart-page-doodle.png" width="150px"/>
+                <div>Nothing in the bag</div>
+                <div>
+                  <a className="success" href="/" style={{"padding": "10px", "border": "2px solid", "borderRadius": "5px"}}>Continue Shopping</a>
                 </div>
               </div>
-              {
-                this.state.cart.length > 0 && 
-                <div className="_2zqhDs _15r1AP">
-                  <div className="_2CQPOE">
-                    <Link to='/'>
-                      <button className="_2AkmmA _14O7kc mrmU5i">
-                        <span>Continue Shopping</span>
-                      </button>
-                    </Link>
-                    <Link to="checkout">
-                      <button className="_2AkmmA _14O7kc _7UHT_c">
-                        <span> Place Order</span>
-                      </button>
-                    </Link>      
+            }
+            {
+              this.state.cart.length > 0 && 
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="order-summary clearfix">
+                    <div className="section-title">
+                      <h3 className="title">Order Review</h3>
+                    </div>
+                    <CartList 
+                      cartData = {this.state.cart}
+                      deleteCart={this.deleteCart}
+                      updateCart={this.updateCart}
+                      decreaseQuantity={this.decreaseQuantity}
+                      totalList={this.state.totalList}
+                    />
                   </div>
                 </div>
-              }
-            </div>
-            
+                {
+                  this.state.cart.length > 0 && 
+                  <div className="_2zqhDs _15r1AP">
+                    <div className="_2CQPOE">
+                      <Link to='/'>
+                        <button className="_2AkmmA _14O7kc mrmU5i">
+                          <span>Continue Shopping</span>
+                        </button>
+                      </Link>
+                      {
+                        localStorage.getItem("user_token") && 
+                        <Link to="checkout">
+                          <button className="_2AkmmA _14O7kc _7UHT_c">
+                            <span> Place Order</span>
+                          </button>
+                        </Link>  
+                      }
+                      {
+                        localStorage.getItem("user_token") === null && 
+                        <a href="#" data-toggle="modal" data-target=".login-register-form">
+                          <button className="_2AkmmA _14O7kc _7UHT_c">
+                            <span> Place Order</span>
+                          </button>
+                        </a>  
+                      }    
+                    </div>
+                  </div>
+                }
+              </div>
+            }
           </div>
         </div>
         <Footer/>
