@@ -151,7 +151,7 @@ class Header extends Component {
             <div className="AsXM8z">
               <div className="row _3XGGG6">
                 <Link className="_2OJxl5" to="/">
-                  <img width="110" src={require("../../assets/images/implus-logo.jpg")} alt="Implusion" title="Implusion"/>
+                  <img width="110" src={require("../../assets/images/header.png")} alt="Implusion" title="Implusion"/>
                 </Link>
                 <div className="_1NLCcM">
                   <form className="_1WMLwI header-form-search" action="/search" method="GET">

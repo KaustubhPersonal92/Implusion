@@ -132,12 +132,12 @@ class ProductCart extends Component {
         <div className="section">
           <div className="container">
             {
-              this.state.cart.length < 0 && 
+              this.state.cart.length <= 0 && 
               <div className="_gP _gO" style={{"padding": "30px 0px 0px"}}>
                 <img src="https://images.bewakoof.com/images/doodles/empty-cart-page-doodle.png" width="150px"/>
                 <div>Nothing in the bag</div>
                 <div>
-                  <a className="success" href="/" style={{"padding": "10px", "border": "2px solid", "borderRadius": "5px"}}>Continue Shopping</a>
+                  <Link className="success" to="/" style={{"padding": "10px", "border": "2px solid", "borderRadius": "5px"}}>Continue Shopping</Link>
                 </div>
               </div>
             }
@@ -169,7 +169,7 @@ class ProductCart extends Component {
                       </Link>
                       {
                         localStorage.getItem("user_token") && 
-                        <Link to="checkout">
+                        <Link to="/checkout">
                           <button className="_2AkmmA _14O7kc _7UHT_c">
                             <span> Place Order</span>
                           </button>
