@@ -39,9 +39,9 @@ export function addToCart(cartData) {
   };
 }
 
-export function getCartData() {
+export function getCartData(uniqueID) {
   return function (dispatch, getState) {
-    return ProductApi.getCartInfoApi().then(response => {
+    return ProductApi.getCartInfoApi(uniqueID).then(response => {
       return response;
     }).catch(error => {
       console.log(error)
@@ -159,4 +159,22 @@ export function updateUserAddressAction(data) {
   };
 }
 
+export function updateUserCartAction(uniqueID) {
+  return function (dispatch, getState) {
+    return ProductApi.updateUserCartApi(uniqueID).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
 
+export function getUserCartDataAction(userToken) {
+  return function (dispatch, getState) {
+    return ProductApi.getUserCartDataApi(userToken).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}

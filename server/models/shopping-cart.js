@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
                 autoIncrement: true
             },
             userId: DataTypes.STRING,
+            uniqueId: DataTypes.STRING,
             createdDate: DataTypes.STRING,
         }, 
         {

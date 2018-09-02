@@ -21,8 +21,6 @@ https://www.nexmo.com/blog/2016/10/19/how-to-send-sms-messages-with-node-js-and-
 */
 
 exports.addUserData = function(req, res) {
-    console.log("req----", req.body)
-
     var userData = {};
     userData.firstName = req.body.user.firstName;
     userData.lastName = req.body.user.lastName;
@@ -44,6 +42,7 @@ exports.addUserData = function(req, res) {
         } else {
             addUserProcess(userData, req.body.cart, function(respone){
                 if(respone) {
+                    console.log("respone----", response);
                     res.json({
                         status: 200,
                         data: respone,
@@ -74,9 +73,9 @@ var addUserProcess = function(user, cart, callback) {
                         attributes:['id']
                     }).then(function(user) {
                         //sendEmailUser(user);
-                        if(user) {
+                        if(userData) {
                             callback({
-                                userID: user.id,
+                                userData: userData,
                             });
                         } else {
                             callback({
@@ -201,48 +200,6 @@ exports.getloggedInUserProfile = function(req, res) {
                 status: 404,
                 data: [],
                 message: 'User Profile not found.'
-            });
-        }
-    });
-};
-
-/**
- * Author Kaustubh Mishra
- * Get User Profile from db
- * @param  {obj}   req
- * @param  {obj}   res
- * @method GET
- * @return json for User Info
-*/
-
-exports.userLogin = function(req, res) {
-    db.models.user.findOne({
-        where:{
-            email:req.body.email
-        }
-    }).then(function(user){
-        if(user) {
-            bcrypt.compare(req.body.password, user.password, function(err, result) {
-                if(result) {
-                    var token = jwt.sign({"id": user.id,"email": user.email},'secretkey');
-                    res.json({
-                        status: 200,
-                        data: token,
-                        message: 'User logged in successfully.'
-                    });
-                } else {
-                    res.json({
-                        status: 404,
-                        data: [],
-                        message: 'Password is invalid.'
-                    });
-                } 
-            });
-        } else {
-            res.json({
-                status: 404,
-                data: [],
-                message: 'Email is invalid.'
             });
         }
     });
@@ -424,3 +381,57 @@ exports.updateUserAddress = function(req, res) {
         }
     })
 };
+
+
+/**
+ * Author Kaustubh Mishra
+ * Get User Profile from db
+ * @param  {obj}   req
+ * @param  {obj}   res
+ * @method GET
+ * @return json for User Info
+*/
+
+exports.userLogin = function(req, res) {
+    userAuthenication(req.body, function(response){
+        if(response.status == 200) {
+            res.json(response)
+        } else {
+            res.json(response)
+        }
+    })
+    
+};
+
+var userAuthenication = function(user, callback) {
+    db.models.user.findOne({
+        where:{
+            email:user.email
+        }
+    }).then(function(userData){
+        if(userData) {
+            bcrypt.compare(user.password, userData.password, function(err, result) {
+                if(result) {
+                    var token = jwt.sign({"id": userData.id,"email": userData.email},'secretkey');
+                    callback({
+                        status: 200,
+                        data: token,
+                        message: 'User logged in successfully.'
+                    });
+                } else {
+                    callback({
+                        status: 404,
+                        data: [],
+                        message: 'Password is invalid.'
+                    });
+                } 
+            });
+        } else {
+            callback({
+                status: 404,
+                data: [],
+                message: 'Email is invalid.'
+            });
+        }
+    });
+}

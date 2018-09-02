@@ -46,13 +46,23 @@ class ProductCart extends Component {
   }
 
   getCartList() {
-    this.props.actions.getCartData().then(response=>{
-      if(response.status === 200) {
-        this.setState({cart: response.data});
-      } else {
-        this.setState({cart: []});
-      }
-    });
+    if(!lodash.isEmpty(localStorage.getItem("user_token"))) {
+      this.props.actions.getUserCartDataAction(localStorage.getItem("user_token")).then(response=>{
+        if(response.status === 200) {
+          this.setState({cart: response.data});
+        } else {
+          this.setState({cart: []});
+        }
+      });
+    } else {
+      this.props.actions.getCartData(localStorage.getItem("uniqueId")).then(response=>{
+        if(response.status === 200) {
+          this.setState({cart: response.data});
+        } else {
+          this.setState({cart: []});
+        }
+      });
+    } 
   }
 
   orderSummaryList() {

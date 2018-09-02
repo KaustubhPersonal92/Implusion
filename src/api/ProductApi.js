@@ -3,7 +3,7 @@ import axios from 'axios';
 class ProductApi {
   static getProductImagesApi() {
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:8080/api/product/getProductImages").then(function(response) {
+      axios.get("api/product/getProductImages").then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data.data);
         }
@@ -16,7 +16,7 @@ class ProductApi {
 
   static getProductDataApi(id) {
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:8080/api/product/getProductInfo/"+id).then(function(response) {
+      axios.get("api/product/getProductInfo/"+id).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -29,7 +29,7 @@ class ProductApi {
 
   static addToCartApi(cartData) {
     return new Promise((resolve, reject) => {
-      axios.post("http://localhost:8080/api/product/addToCart/", cartData).then(function(response) {
+      axios.post("api/product/addToCart/", cartData).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -40,9 +40,9 @@ class ProductApi {
     });
   }
 
-  static getCartInfoApi() {
+  static getCartInfoApi(uniqueID) {
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:8080/api/product/getCartDetail/").then(function(response) {
+      axios.get("api/product/getCartDetail/"+uniqueID).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -55,7 +55,7 @@ class ProductApi {
 
   static getOrderSummaryApi() {
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:8080/api/product/getCartSummary/").then(function(response) {
+      axios.get("api/product/getCartSummary/").then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -74,7 +74,7 @@ class ProductApi {
       "productId": productId
     };
     return new Promise((resolve, reject) => {
-      axios.post("http://localhost:8080/api/product/deleteCart/",cartObject).then(function(response) {
+      axios.post("api/product/deleteCart/",cartObject).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -87,7 +87,7 @@ class ProductApi {
 
   static updateCartApi(product) {
     return new Promise((resolve, reject) => {
-      axios.put("http://localhost:8080/api/product/updateCart/"+product.shoppingCart_id, product).then(function(response) {
+      axios.put("api/product/updateCart/"+product.shoppingCart_id, product).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -100,7 +100,7 @@ class ProductApi {
 
   static addUserApi(data) {
     return new Promise((resolve, reject) => {
-      axios.post("http://localhost:8080/api/user/addUser/", data).then(function(response) {
+      axios.post("api/user/addUser/", data).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -120,7 +120,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:8080/api/user/getUserProfile/", config).then(function(response) {
+      axios.get("api/user/getUserProfile/", config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -133,7 +133,7 @@ class ProductApi {
 
   static userAuthenticationApi(data) {
     return new Promise((resolve, reject) => {
-      axios.post("http://localhost:8080/api/user/authenication/", data).then(function(response) {
+      axios.post("api/user/authenication/", data).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -153,7 +153,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:8080/api/user/address/", config).then(function(response) {
+      axios.get("api/user/address/", config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -173,7 +173,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get("http://postalpincode.in/api/pincode/"+pincode).then(function(response) {
+      axios.get("api/pincode/"+pincode).then(function(response) {
         if(response.data.status === 200) {
           resolve(response);
         }
@@ -193,7 +193,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.post("http://localhost:8080/api/user/address/", data, config).then(function(response) {
+      axios.post("api/user/address/", data, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -213,7 +213,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:8080/api/user/address/"+addresId + "/" +userId, config).then(function(response) {
+      axios.get("api/user/address/"+addresId + "/" +userId, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -234,7 +234,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.put("http://localhost:8080/api/user/address/"+data.id, data, config).then(function(response) {
+      axios.put("api/user/address/"+data.id, data, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -244,7 +244,49 @@ class ProductApi {
       })
     });
   }
-  
+
+  static updateUserCartApi(uniqueId) {
+    var data = {
+      "uniqueId":uniqueId
+    };
+
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userToken
+      }
+    };
+    return new Promise((resolve, reject) => {
+      axios.put("api/product/updateUserCart/", data, config).then(function(response) {
+        if(response.data.status === 200) {
+          resolve(response.data);
+        }
+        else {
+          resolve(response.data);
+        }
+      })
+    });
+  }
+
+  static getUserCartDataApi(userToken) {
+    var config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer "+ userToken
+      }
+    };
+    return new Promise((resolve, reject) => {
+      axios.get("api/product/getUserCartData/", config).then(function(response) {
+        if(response.data.status === 200) {
+          resolve(response.data);
+        }
+        else {
+          resolve(response.data);
+        }
+      })
+    });
+  }
 }
 
 export default ProductApi;

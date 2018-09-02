@@ -40,11 +40,13 @@ class ProductDetailPage extends Component {
       var cart = this.state.cart;
       cart.price= this.state.productInfo.productPrice;
       cart.quantity =1;
+      cart.uniqueId = localStorage.getItem("uniqueId");
       this.setState({cart: cart});
       this.props.actions.addToCart(this.state.cart).then(response=>{
         console.log("response---", response);
         if(response.status === 200) {
           this.setState({navigate: true});
+          this.updateUserIdInCart()
         }
       });
     }
@@ -83,6 +85,18 @@ class ProductDetailPage extends Component {
       if(response.status === 200) {
         var userProfile = this.state.userProfile;
         this.setState({userProfile:response.data})
+      } else {
+        toastr.error(response.message);
+      }
+    });
+  }
+
+  updateUserIdInCart() {
+    var uniqueId = localStorage.getItem("uniqueId");
+    this.props.actions.updateUserCartAction(uniqueId).then(response=>{
+      if(response.status === 200) {
+        var userProfile = this.state.userProfile;
+        this.setState({userProfile:[response.data]})
       } else {
         toastr.error(response.message);
       }

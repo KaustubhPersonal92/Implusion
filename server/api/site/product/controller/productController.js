@@ -5,6 +5,7 @@ var generalConfig = require('../../../../config/generalConfig');
 var async = require('async');
 var Sequelize = require("sequelize");
 var email = require('nodemailer');
+var jwt = require('jsonwebtoken');
 
 https://www.nexmo.com/blog/2016/10/19/how-to-send-sms-messages-with-node-js-and-express-dr/
 
@@ -21,7 +22,6 @@ https://www.nexmo.com/blog/2016/10/19/how-to-send-sms-messages-with-node-js-and-
 */
 
 exports.getProductImages = function(req, res) {
-    console.log("Reuqtes commee-----")
     db.models.products.findAll().then(function(product) {
         if(product) {
             res.json({
@@ -85,8 +85,7 @@ exports.addToCartProduct = function(req, res) {
     var cartData = {};
     cartData.quantity = req.body.quantity;
     cartData.productId = req.body.productId;
-    cartData.userId = req.body.userId;
-
+    cartData.uniqueId = req.body.uniqueId;
     db.models.shopping_cart.create(cartData).then(function(productData) {
         if(productData) {
             var cartItem = {};
@@ -152,6 +151,9 @@ exports.addToCartProduct = function(req, res) {
 exports.getCartDetail = function(req, res) {
     var productResult = '';
     db.models.shopping_cart.findAll({
+        where:{
+            uniqueId: req.params.uniqueID
+        },
         include: [{
             model: db.models.cart_item,
             include:[{
@@ -508,3 +510,105 @@ var sendEmailUser = function(user, callback) {
 };
 
 
+/**
+ * Author Kaustubh Mishra
+ * Update User Cart into db
+ * @param  {obj}   req
+ * @param  {obj}   res
+ * @method GET
+ * @return json for Product Info
+*/
+
+exports.updateUserCart = function(req, res) {
+    var userInfo = jwt.verify(req.token, 'secretkey');
+
+    db.models.shopping_cart.update(
+        {
+            userId:userInfo.id
+        },
+        {
+            where:{
+                uniqueId:req.body.uniqueId
+            }        
+        }).then(function(user){
+        if(user) {
+            res.json({
+                status: 200,
+                data: [],
+                message: 'User id updated successfully in shopping cart.'
+            });
+        } else {
+            res.json({
+                status: 401,
+                data: [],
+                message: 'Unable to update user id.'  
+            })
+        }
+    })
+};
+
+/**
+ * Author Kaustubh Mishra
+ * Get User Cart Info from db
+ * @param  {obj}   req
+ * @param  {obj}   res
+ * @method GET
+ * @return json for Product Info
+*/
+
+exports.getUserCartData = function(req, res) {
+    
+    var userInfo = jwt.verify(req.token, 'secretkey');
+
+    db.models.shopping_cart.findAll({
+        where:{
+            userId: userInfo.id
+        },
+        include: [{
+            model: db.models.cart_item,
+            include:[{
+                model: db.models.products
+            }]
+        }]
+    }).then(function (productData){
+        var trialListArray = [];
+        if(productData.length > 0) {
+            async.forEach(Object.keys(productData), function(item, callback) {
+                var trialList = {};
+                for(var i=0; i < productData[item].dataValues.cart_items.length; i++ ) {
+                    if(productData[item].dataValues.cart_items[i].product &&  productData[item].dataValues.cart_items[i].product != null) {
+                        var trialList = {};
+                        trialList = {
+                            "shoppingCart_id": productData[item].dataValues.cart_items[i].shoppingCartId,
+                            "productName": productData[item].dataValues.cart_items[i].product.dataValues.Name,
+                            "productPrice": productData[item].dataValues.cart_items[i].price,
+                            "productImage": productData[item].dataValues.cart_items[i].product.dataValues.Product_Image,
+                            "productQuantity": productData[item].dataValues.cart_items[i].quantity,
+                            "product_id": productData[item].dataValues.cart_items[i].productId,
+                            "productSize": productData[item].dataValues.cart_items[i].size,
+                            "productTotal": productData[item].dataValues.cart_items[i].total
+                        }
+                        trialListArray.push(trialList);
+                    }
+                }
+            }, function(err){
+                console.log(err);
+            })
+            res.json({
+                status: 200,
+                data: trialListArray,
+                message: 'Failed to load data..!'
+            });
+            
+        }
+        else {
+            res.json({
+                status: 404,
+                data: [],
+                message: 'Failed to load data..!'
+            });
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });     
+};

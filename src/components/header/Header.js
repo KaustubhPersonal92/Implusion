@@ -37,10 +37,7 @@ class Header extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.addUser = this.addUser.bind(this);
-  }
-
-  componentWillMount() {
-    this.getUserProfile();
+    this.getUserProfile()
   }
 
   isValidAuth() {
@@ -87,6 +84,7 @@ class Header extends Component {
           localStorage.setItem("user_token", response.data);
           window.location.reload()
           this.getUserProfile();
+          this.updateUserIdInCart();
         } else {
           toastr.error(response.message);
           this.setState({userProfile:[]})
@@ -108,7 +106,8 @@ class Header extends Component {
 
   logout() {
     localStorage.removeItem("user_token");
-    this.setState({userProfile:[], navigate: true});
+    localStorage.removeItem("uniqueId");
+    this.setState({navigate: true});
   }
 
   setGender(gender) {
@@ -117,13 +116,24 @@ class Header extends Component {
     this.setState({user: user});
   }
 
+  updateUserIdInCart() {
+    var uniqueId = localStorage.getItem("uniqueId");
+    this.props.actions.updateUserCartAction(uniqueId).then(response=>{
+      if(response.status === 200) {
+        var userProfile = this.state.userProfile;
+        this.setState({userProfile:[response.data]})
+      } else {
+        toastr.error(response.message);
+      }
+    });
+  }
+
 
   addUser() {
     if(this.isValidUser()) {
       this.setState({ errors: {} });
       var userProduct ={
-        "user": this.state.userObject,
-        "cart": this.state.cart
+        "user": this.state.userObject
       };
       this.props.actions.addUser(userProduct).then(response=>{
         if(response.status === 200) {

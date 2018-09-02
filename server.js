@@ -5,6 +5,7 @@ var compression = require('compression');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var expressValidator = require('express-validator');
+var cookieParser = require('cookie-parser');
 
 
 const app = express();
@@ -13,7 +14,6 @@ app.set('port', (process.env.PORT || 8080));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
 
 app.use(express.static(path.resolve(__dirname, 'build')));
 
