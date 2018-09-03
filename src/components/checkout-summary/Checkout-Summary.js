@@ -14,7 +14,8 @@ class CheckoutSummary extends Component {
 	    super(props, context);
 	    this.state= {
 			navigate: false,
-			selectedUserAddress:{}
+			selectedUserAddress:{},
+			cart:[]
 	    }
 		this.redirectToPayment =this.redirectToPayment.bind(this);
 	}
@@ -25,6 +26,7 @@ class CheckoutSummary extends Component {
 			var userID = this.props.match.params.userId;
 			this.getUserAddressById(addressID, userID)
 		}
+		this.getCartList();
 	}
 
 	redirectToPayment() {
@@ -41,6 +43,18 @@ class CheckoutSummary extends Component {
 	  	});
 	}
 
+	getCartList() {
+		this.props.actions.getUserCartDataAction(localStorage.getItem("user_token")).then(response=>{
+			if(response.status === 200) {
+			  this.setState({cart: response.data});
+			} else {
+			  this.setState({cart: []});
+			}
+		});
+	}
+
+	
+
   	render() {
   		const { navigate } = this.state
 	    if (navigate) {
@@ -52,80 +66,57 @@ class CheckoutSummary extends Component {
       		<div className="_uv" style={{"padding": "15px"}}>
       			<div className="container">
       				<div className="container-fluid no-pd" style={{"position": "relative", "margin": "auto -15px"}}>
-      					<div className="col-sm-7 noPdXs _ud">
-      						<div className="col-xs-12 no-pd hidden-xs" style={{"fontSize": "20px"}}>
-      							Checkout Summary<br/><br/>
-      						</div>
-      						<div className="_tO">
-      							<span className="pull-left hidden-xs">My Bag<span style={{"fontSize": "12px", "opacity": "0.5"}}><br/>(1 item)</span></span>
-      							<span className="pull-left visible-xs" style={{"fontFamily": "montserrat-regular", "fontSize": "16px"}}>(1 item)</span>
-      							<span className="pull-right" style={{"fontFamily": "montserrat-bold", "fontSize": "16px"}}><i className="fa fa-inr" style={{"fontSize": "12px"}}></i> 799</span>
-      						</div>
-      						<div>
-      							<div className="_tQ">
-      								<p className="col-xs-5 col-sm-4 col-md-3 visible-xs no-padding _tW">
-      									<img src="https://images.bewakoof.com/t320/pine-green-mandarin-collar-pique-shirt-men-s-plain-mandarin-collar-pique-shirts-189337-1533041352.jpg"/>
-      								</p>
-      								<p className="col-xs-4 col-sm-3 col-md-2 no-padding hidden-xs _tW">
-      									<img src="https://images.bewakoof.com/t320/pine-green-mandarin-collar-pique-shirt-men-s-plain-mandarin-collar-pique-shirts-189337-1533041352.jpg"/>
-      								</p>
-      								<div className="col-xs-7 col-sm-8 col-md-9 visible-xs no-padding _tX">
-      									<div>
-      										<p className="_tR">Pine Green Mandarin Collar Pique Shirt</p>
-      										<div className="_tS">
-      											<i className="fa fa-inr" style={{"fontSize": "11px", "marginRight": "3px"}}></i>
-      											799
-      										</div>
-      										<div className="col-xs-12 no-padding _tT">
-      											<div className="_tU">
-      												<span style={{"opacity": "0.7", "fontSize": "11px"}}>Size: </span>
-      												<span style={{"fontSize": "13px"}}>L</span>
-      											</div>
-      											<div className="_tU">
-      												<span style={{"opacity": "0.7", "fontSize": "11px"}}>Qty: </span>
-      												<span style={{"fontSize": "13px"}}>1</span>
-      											</div>
-      										</div>
-      									</div>
-      								</div>
-      								<div className="col-xs-8 col-sm-9 col-md-10 hidden-xs no-padding _tX">
-      									<div>
-      										<p className="_tR">Pine Green Mandarin Collar Pique Shirt</p>
-      										<div className="_tS">
-      											<i className="fa fa-inr" style={{"fontSize": "11px", "marginRight": "3px"}}></i>
-      											799
-      										</div>
-      										<div className="col-xs-12 no-padding _tT">
-      											<div className="_tU">
-      												<span style={{"opacity": "0.7", "fontSize": "11px"}}>Size: </span>
-      												<span style={{"fontSize": "13px"}}>L</span>
-      											</div>
-      											<div className="_tU">
-      												<span style={{"opacity": "0.7", "fontSize": "11px"}}>Qty: </span>
-      												<span style={{"fontSize": "13px"}}>1</span>
-      											</div>
-      										</div>
-      									</div>
-      								</div>
-      								<div className="col-xs-7 col-sm-8 col-md-9 visible-xs _tY _tX">
-      									<div> 
-      										<div className="_tZ">
-      											<img src="https://images.bewakoof.com/web/delivery.png" style={{"width": "17px", "marginBottom": "-2px"}}/>
-      											Expected delivery: 23rd Aug
-      										</div>
-      									</div>
-      								</div>
-      								<div className="col-xs-8 col-sm-9 col-md-10 hidden-xs _tY _tX">
-      									<div> 
-      										<div className="_tZ">
-      											<img src="https://images.bewakoof.com/web/delivery.png" style={{"width": "17px", "marginBottom": "-2px"}}/>
-      											Expected delivery: 23rd Aug
-      										</div>
-      									</div>
-      								</div>
-      							</div>
-      						</div>
-      					</div>
+					  	<div className="col-sm-7 noPdXs _ud">
+							<div className="col-xs-12 no-pd hidden-xs" style={{"fontSize": "20px"}}>
+								Checkout Summary<br/><br/>
+							</div>
+								{
+									this.state.cart.length > 0 && 
+										this.state.cart.map(cart=>
+											<div>
+												<div className="_tO">
+													<span className="pull-left hidden-xs">My Bag<span style={{"fontSize": "12px", "opacity": "0.5"}}><br/>(1 item)</span></span>
+													<span className="pull-left visible-xs" style={{"fontFamily": "montserrat-regular", "fontSize": "16px"}}>(1 item)</span>
+													<span className="pull-right" style={{"fontFamily": "montserrat-bold", "fontSize": "16px"}}><i className="fa fa-inr" style={{"fontSize": "12px"}}></i> 799</span>
+												</div>
+												<div>
+													<div className="_tQ">
+														<p className="col-xs-4 col-sm-3 col-md-2 no-padding hidden-xs _tW">
+														<img src={require('../../assets/images/'+cart.productImage)} alt=""/>
+														</p>
+														<div className="col-xs-8 col-sm-9 col-md-10 hidden-xs no-padding _tX">
+															<div>
+																<p className="_tR">{cart.productName}</p>
+																<div className="_tS">
+																	<i className="fa fa-inr" style={{"fontSize": "11px", "marginRight": "3px"}}></i>
+																	{cart.productPrice}
+																</div>
+																<div className="col-xs-12 no-padding _tT">
+																	<div className="_tU">
+																		<span style={{"opacity": "0.7", "fontSize": "11px"}}>Size: </span>
+																		<span style={{"fontSize": "13px"}}>{cart.productSize}</span>
+																	</div>
+																	<div className="_tU">
+																		<span style={{"opacity": "0.7", "fontSize": "11px"}}>Qty: </span>
+																		<span style={{"fontSize": "13px"}}>{cart.productQuantity}</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div className="col-xs-8 col-sm-9 col-md-10 hidden-xs _tY _tX">
+															<div> 
+																<div className="_tZ">
+																	<img src="https://images.bewakoof.com/web/delivery.png" style={{"width": "17px", "marginBottom": "-2px"}}/>
+																	Expected delivery: 23rd Aug
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										)
+									}
+								</div>
       					<div style={{"margin": "0px -15px"}}>
       						<div className="_ua visible-xs">
       							<span style={{"float": "left", "width": "100%", "opacity": "0.7"}}>Delivery Address</span>

@@ -22,10 +22,8 @@ class MainPage extends Component {
         result += chars[Math.round(Math.random() * (chars.length - 1))];
       }
       localStorage.setItem("uniqueId", result);
-    } else {
-      
-    }
-    
+    } else { 
+    } 
   }
   
   render() {

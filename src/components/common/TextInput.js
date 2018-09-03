@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-const TextInput = ({id,name, label, onChange,onSelect, disabled, placeholder, type, value, error}) => {
+const TextInput = ({id,name, label, onChange,onSelect, disabled, placeholder, type, value, error, maxLength}) => {
   let wrapperClass = 'form-group';
   if (error && error.length > 0) {
     wrapperClass += " " + 'has-error';
@@ -17,7 +17,9 @@ const TextInput = ({id,name, label, onChange,onSelect, disabled, placeholder, ty
         type={type}
         disabled={disabled}
         onChange={onChange}
-        onSelect = {onSelect}/>
+        onSelect = {onSelect}
+        maxLength={maxLength}
+      />
       {error && <div className="help-block">{error}</div>}
     </div>
   );

@@ -140,6 +140,9 @@ class Header extends Component {
           toastr.success(response.message);
           const $ = window.$;
           $('.login-register-form').modal('hide');
+          localStorage.setItem("user_token", response.data);
+          this.getUserProfile();
+          this.updateUserIdInCart();
         } else {
           toastr.error(response.message);
         }
@@ -331,6 +334,7 @@ class Header extends Component {
                               error={this.state.errors.number}
                               type="text"
                               placeholder="Mobile"
+                              maxLength="10"
                             /> 
                           </div>
                         </div>

@@ -150,7 +150,7 @@ class ProductDetailPage extends Component {
                     </ul>
                   </div>
                   <div className="product-btns">
-                    <button className="primary-btn add-to-cart" onClick={this.addToCart}><i className="fa fa-shopping-cart"></i> Add to Cart</button>    
+                    <button  onClick={this.addToCart} className="success" style={{"padding": "10px", "border": "2px solid", "borderRadius": "5px"}}><i className="fa fa-shopping-cart"></i> Add to Cart</button>    
                   </div>
                 </div>
               </div>

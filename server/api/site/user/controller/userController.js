@@ -40,13 +40,17 @@ exports.addUserData = function(req, res) {
                 message: 'Email-id already existed.'
             });
         } else {
-            addUserProcess(userData, req.body.cart, function(respone){
-                if(respone) {
-                    console.log("respone----", response);
-                    res.json({
-                        status: 200,
-                        data: respone,
-                        message: 'User added  successfully.'  
+            addUserProcess(userData, req.body.cart, function(response){
+                if(response) {
+                    response.userData.password = req.body.user.password;
+                    userAuthenication(response.userData, function(loginSuccess){
+                        if(loginSuccess.status ==200) {
+                            res.json({
+                                status: 200,
+                                data: loginSuccess.data,
+                                message: 'User added  successfully.'  
+                            })
+                        }
                     })
                 } else {
                     res.json({
@@ -74,9 +78,7 @@ var addUserProcess = function(user, cart, callback) {
                     }).then(function(user) {
                         //sendEmailUser(user);
                         if(userData) {
-                            callback({
-                                userData: userData,
-                            });
+                            callback({userData});
                         } else {
                             callback({
                                 status: 201,
