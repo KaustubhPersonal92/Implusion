@@ -109,7 +109,7 @@ class ProductDetailPage extends Component {
     if(imageLoad) {
       productImage = <img src={require('../../assets/images/blank-image.png')}  alt="No image"/>
     } else {
-      productImage = <img src={require('../../assets/images/'+this.state.productInfo.productImage)} alt =""/>
+      productImage = <img src={require('../../assets/images/'+this.state.productInfo.productImage)} alt ="" style={{"height":"400px", "width":"260px"}}/>
     }
 
     const { navigate } = this.state

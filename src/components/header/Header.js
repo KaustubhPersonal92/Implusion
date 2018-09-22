@@ -108,6 +108,7 @@ class Header extends Component {
     localStorage.removeItem("user_token");
     localStorage.removeItem("uniqueId");
     this.setState({navigate: true});
+    window.location.reload();
   }
 
   setGender(gender) {
@@ -222,15 +223,18 @@ class Header extends Component {
           </div>
         </div>
         <div className="_2hlh_L"></div>
-        <div className="zi6sUf _3Ed3Ub">
-          <ul className="_114Zhd">
-            <li className="Wbt_B2">
-              <Link title="Electronics" className="_1QZ6fC" to="/">
-                <span>Home | Product </span>
-              </Link>
-            </li>
-          </ul>
-        </div>
+        {
+          this.props.menuCartIcon == false && 
+          <div className="zi6sUf _3Ed3Ub">
+            <ul className="_114Zhd">
+              <li className="Wbt_B2">
+                <Link title="Electronics" className="_1QZ6fC" to="/">
+                  <span>Home | Product </span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        }
         <div className="container">
           <div className="row">
             <div className="modal fade login-register-form" role="dialog">

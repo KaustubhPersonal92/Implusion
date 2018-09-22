@@ -22,7 +22,11 @@ https://www.nexmo.com/blog/2016/10/19/how-to-send-sms-messages-with-node-js-and-
 */
 
 exports.getProductImages = function(req, res) {
-    db.models.products.findAll().then(function(product) {
+    db.models.products.findAll({
+        where:{
+            isActive:1
+        }
+    }).then(function(product) {
         if(product) {
             res.json({
                 status: 200,
@@ -388,32 +392,18 @@ exports.addUser = function(req, res) {
     userData.pincode = req.body.user.pincode;
     userData.contactNumber = req.body.user.contactNumber;
     userData.country = req.body.user.country;
-    db.models.user.findOne({
-        where:{
-            email:req.body.user.email
-        }
-    }).then(function(user){
-        if(user) {
+    addUserProcess(userData, req.body.cart, function(respone){
+        if(respone) {
             res.json({
-                status: 201,
-                data: [],
-                message: 'Email-id already existed.'
-            });
+                status: 200,
+                data: respone,
+                message: 'Your order has been placed successfully.'  
+            })
         } else {
-            addUserProcess(userData, req.body.cart, function(respone){
-                if(respone) {
-                    res.json({
-                        status: 200,
-                        data: respone,
-                        message: 'Your order has been placed successfully.'  
-                    })
-                } else {
-                    res.json({
-                        status: 401,
-                        data: [],
-                        message: 'Unable to placed your order.'  
-                    })
-                }
+            res.json({
+                status: 401,
+                data: [],
+                message: 'Unable to placed your order.'  
             })
         }
     })

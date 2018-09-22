@@ -173,7 +173,7 @@ class ProductCart extends Component {
                   <div className="_2zqhDs _15r1AP">
                     <div className="_2CQPOE">
                       <Link to='/'>
-                        <button className="_2AkmmA _14O7kc mrmU5i">
+                        <button className="_2AkmmA _14O7kc _7UHT_c">
                           <span>Continue Shopping</span>
                         </button>
                       </Link>

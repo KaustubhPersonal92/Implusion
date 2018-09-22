@@ -8,7 +8,7 @@ const ProductImages = ({productImage, redirectProduct}) => {
         <div className="col-md-3">
           <div className="product product-single" key={productImages.id}>
             <div className="product-thumb" onClick={()=>redirectProduct(productImages.id)}>
-              <img src={require('../../assets/images/'+productImages.Product_Image)} alt=""/>
+              <img src={require('../../assets/images/'+productImages.Product_Image)} alt="" style={{"height":"354px", "width":"255px"}}/>
             </div>
           </div>    
         </div>    

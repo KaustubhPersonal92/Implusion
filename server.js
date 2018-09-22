@@ -8,7 +8,7 @@ var expressValidator = require('express-validator');
 var cookieParser = require('cookie-parser');
 
 
-const app = express();
+var app = express();
 
 app.set('port', (process.env.PORT || 8080));
 
@@ -20,6 +20,11 @@ app.use(express.static(path.resolve(__dirname, 'build')));
 const router = require('./server/serverRoute');
 router(app);
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.get('/*', function (req, res, next) {
     res.sendFile(path.resolve(__dirname, 'build', 'index.html'));

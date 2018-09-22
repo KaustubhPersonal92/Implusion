@@ -16,7 +16,8 @@ class Checkout extends Component {
 	      navigate: false,
 		  userAddress:[],
 		  userID:'',
-		  addressID:''
+		  addressID:'',
+		  hideMenuIcon:true
 	    };
 	    this.selectUserAddress = this.selectUserAddress.bind(this);
 	}
@@ -54,7 +55,9 @@ class Checkout extends Component {
 	    }
     	return (
 		<div>
-			<Header/>
+			<Header
+				menuCartIcon = {this.state.hideMenuIcon}
+			/>
       		<div className="_q">
 				<div className="_r col-xs-12">
 					<div className="_R">
