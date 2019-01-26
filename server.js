@@ -22,7 +22,7 @@ app.set('port', (process.env.PORT || 8080));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-//app.use(express.static(path.resolve(__dirname, 'build')));
+app.use(express.static(path.resolve(__dirname, 'build')));
 
 app.post('/data', function(req, res) {
     console.log(req.body);
@@ -33,10 +33,10 @@ const router = require('./server/serverRoute');
 router(app);
 
 
-// app.get('/*', function (req, res, next) {
-//     res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
-//     next();
-// });
+app.get('/*', function (req, res, next) {
+    res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+    next();
+});
 
 
 
