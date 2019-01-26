@@ -122,7 +122,7 @@ class ProductCart extends Component {
         var userProfile = this.state.userProfile;
         this.setState({userProfile:response.data})
       } else {
-        toastr.error(response.message);
+        //toastr.error(response.message);
       }
     });
   }
