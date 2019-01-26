@@ -121,7 +121,7 @@ class ProductApi {
   }
 
   static getUserProfileApi() {
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ class ProductApi {
   }
 
   static getUserAddressApi() {
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ class ProductApi {
   }
 
   static getPincodeApi(pincode) {
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ class ProductApi {
   }
 
   static addUserAddressApi(data) {
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ class ProductApi {
   }
 
   static getUserAddressByIdActionApi(addresId, userId) {
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -235,7 +235,7 @@ class ProductApi {
 
   static updateUserAddressApi(data) {
     console.log("data---", data)
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -259,7 +259,7 @@ class ProductApi {
       "uniqueId":uniqueId
     };
 
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -311,7 +311,7 @@ class ProductApi {
   }
 
   static changePasswordApi(data) {
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     
     var config = {
       headers: {
@@ -333,7 +333,7 @@ class ProductApi {
   }
 
   static updateProfileApi(data) {
-    var userToken = "Bearer "+ prodStorage.getItem("user_token");
+    var userToken = "Bearer "+ localStorage.getItem("user_token");
     
     var config = {
       headers: {
