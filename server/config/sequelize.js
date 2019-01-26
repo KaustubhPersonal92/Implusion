@@ -20,6 +20,7 @@ var sequelize = new Sequelize(config.db.database, config.db.username, config.db.
 /*************** Company Database Reading Model Files: Start ************************/
 
 //loop through all files in models directory ignoring hidden files and this file
+console.log(config.modelsDir.path);
 fs.readdirSync(config.modelsDir.path)
     .filter(function(file) {
         return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file !== 'data') && (file !== 'master_database');

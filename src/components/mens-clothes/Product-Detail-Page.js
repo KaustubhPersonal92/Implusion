@@ -43,10 +43,8 @@ class ProductDetailPage extends Component {
       cart.uniqueId = localStorage.getItem("uniqueId");
       this.setState({cart: cart});
       this.props.actions.addToCart(this.state.cart).then(response=>{
-        console.log("response---", response);
         if(response.status === 200) {
-          this.setState({navigate: true});
-          this.updateUserIdInCart()
+          this.setState({navigate: true})
         }
       });
     }
@@ -54,7 +52,7 @@ class ProductDetailPage extends Component {
   }
 
   componentWillMount() {
-    this.getUserProfile();
+    //this.getUserProfile();
     var cart = this.state.cart;
     cart.productId = this.props.match.params.id
     var productId = this.props.match.params.id 
@@ -96,7 +94,7 @@ class ProductDetailPage extends Component {
     this.props.actions.updateUserCartAction(uniqueId).then(response=>{
       if(response.status === 200) {
         var userProfile = this.state.userProfile;
-        this.setState({userProfile:[response.data]})
+        this.setState({userProfile:[response.data], navigate: true})
       } else {
         toastr.error(response.message);
       }

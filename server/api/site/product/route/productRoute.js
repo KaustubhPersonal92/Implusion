@@ -1,23 +1,9 @@
 'use strict';
 
 var productController = require('../controller/productController');
+const tokenGetter = require('../../../../middleware/middleware');
 
 module.exports = function(app) {
-    function verifyToken(req, res, next) {
-		const bearerHeader = req.headers['authorization'];
-		if(typeof bearerHeader !== 'undefined') {
-			const bearer = bearerHeader.split(' ');
-			const bearerToken = bearer[1];
-			req.token = bearerToken;
-			next();
-		} else {
-			res.json({
-	            status: 404,
-	            data: [],
-	            message: 'No Token supplied.'
-			})
-		}
-    };
     
     app.get('/api/product/getProductImages', productController.getProductImages);
 
@@ -25,7 +11,7 @@ module.exports = function(app) {
 
     app.get('/api/product/getCartDetail/:uniqueID', productController.getCartDetail);
 
-    app.get('/api/product/getCartSummary/', productController.getCartSummary)
+    app.get('/api/product/getCartSummary/', tokenGetter, productController.getCartSummary)
     
     app.post('/api/product/addToCart/', productController.addToCartProduct);
 
@@ -33,9 +19,9 @@ module.exports = function(app) {
 
     app.put('/api/product/updateCart/:shoppingId', productController.updateCartProduct);
 
-	app.put('/api/product/updateUserCart/', verifyToken, productController.updateUserCart);
+	app.put('/api/product/updateUserCart/', tokenGetter, productController.updateUserCart);
 
-	app.get('/api/product/getUserCartData/', verifyToken, productController.getUserCartData);
+	app.get('/api/product/getUserCartData/', tokenGetter, productController.getUserCartData);
 	
 	
 

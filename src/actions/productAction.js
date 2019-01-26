@@ -9,6 +9,11 @@ export function loadCartSuccess(cart) {
   return {type: types.LOAD_CART_SUCCESS, cart};
 }
 
+export function loadUserSuccess(userProfile) {
+  return {type: types.LOAD_USER_PROFILE_SUCCESS, userProfile};
+}
+
+
 export function loadProductImages() {
 	return function (dispatch, getState) {
     return ProductApi.getProductImagesApi().then(response => {
@@ -92,6 +97,7 @@ export function addUser(data) {
 export function getUserProfileAction() {
   return function (dispatch, getState) {
     return ProductApi.getUserProfileApi().then(response => {
+      dispatch(loadUserSuccess(response));
       return response;
     }).catch(error => {
       console.log(error)
@@ -172,6 +178,36 @@ export function updateUserCartAction(uniqueID) {
 export function getUserCartDataAction(userToken) {
   return function (dispatch, getState) {
     return ProductApi.getUserCartDataApi(userToken).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function makePaymentAction() {
+  return function (dispatch, getState) {
+    return ProductApi.makePaymentApi().then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function changePasswordAction(data) {
+  return function (dispatch, getState) {
+    return ProductApi.changePasswordApi(data).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function updateProfileAction(data) {
+  return function (dispatch, getState) {
+    return ProductApi.updateProfileApi(data).then(response => {
       return response;
     }).catch(error => {
       console.log(error)

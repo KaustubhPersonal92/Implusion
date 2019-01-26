@@ -4,7 +4,7 @@ import Slider from '../slider/Slider.js';
 import MensClothes from '../mens-clothes/Mens-Clothes.js';
 import Footer from '../footer/Footer.js';
 import lodash from 'lodash';
-
+import style from './mainCom.css';
 
 class MainPage extends Component {
   constructor(props, context) {

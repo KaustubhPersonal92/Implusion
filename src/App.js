@@ -11,6 +11,9 @@ import CheckoutSummary from './components/checkout-summary/Checkout-Summary';
 import Payment from './components/payment/Payment';
 import AddNewAddress from './components/add-new-address/Add-New-Address';
 import CustomerOrders from './components/customer-orders/Customer-Orders';
+import Account from './components/my-account/My-Account';
+import UserAddress from './components/user-address/User-Address';
+import UserProfile from './components/user-profile/User-Profile';
 
 class App extends Component {
   render() {
@@ -27,6 +30,9 @@ class App extends Component {
           <Route exact name="index" path="/checkout/newAddress" component={AddNewAddress}/>
           <Route exact name="index" path="/myaccount/orders" component={CustomerOrders}/>
           <Route exact name="index" path="/checkout/updateAddress/:addressId/:userId" component={AddNewAddress}/>
+          <Route exact name="index" path="/myaccount" component={Account}/>
+          <Route exact name="index" path="/myaccount/address" component={UserAddress}/>
+          <Route exact name="index" path="/myaccount/profile" component={UserProfile}/>
         </div>
       </Router>
     );

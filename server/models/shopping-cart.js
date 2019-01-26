@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
             },
             userId: DataTypes.STRING,
             uniqueId: DataTypes.STRING,
+            product_id: DataTypes.STRING,
             createdDate: DataTypes.STRING,
         }, 
         {

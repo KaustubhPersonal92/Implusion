@@ -88,60 +88,79 @@ exports.getProductInfoById = function(req, res) {
 exports.addToCartProduct = function(req, res) {
     var cartData = {};
     cartData.quantity = req.body.quantity;
-    cartData.productId = req.body.productId;
+    cartData.product_id = req.body.productId;
     cartData.uniqueId = req.body.uniqueId;
-    db.models.shopping_cart.create(cartData).then(function(productData) {
-        if(productData) {
-            var cartItem = {};
-            cartItem.productId = req.body.productId;
-            cartItem.quantity = req.body.quantity;
-            cartItem.shoppingCartId = productData.id;
-            cartItem.price = req.body.price;
-            cartItem.quantity = req.body.quantity;
-            cartItem.total = req.body.price * req.body.quantity;
-            cartItem.size = req.body.size;
-            cartItem.color = '';
-            db.models.cart_item.create(cartItem).then(function (respone) {
-                if(respone){
-                    res.json({
-                        status: 200,
-                        data: respone,
-                        message: 'Product added into cart successfully.'
-                    }); 
-                    // orderDetail(req.body.productId, req.body.price, req.body.quantity, req.body.size, 'Yellow', function(orderResponse){
-                    //     if(orderResponse){
-                    //         res.json({
-                    //             status: 200,
-                    //             data: orderResponse,
-                    //             message: 'Product added into cart successfully.'
-                    //         });    
-                    //     } else {
-                    //         res.json({
-                    //             status: 401,
-                    //             data: [],
-                    //             message: 'Failed to add product in cart.'
-                    //         });
-                    //     }
-                                
-                    // })
-                } else {
+    checkProductExist(req.body.productId, function(result){
+        if(result.status ==200) {
+            res.json({
+                status: 200,
+                data: result,
+                message: 'Product added into cart successfully.'
+            }); 
+        } else {
+            db.models.shopping_cart.create(cartData).then(function(productData) {
+                if(productData) {
+                    var cartItem = {};
+                    cartItem.productId = req.body.productId;
+                    cartItem.quantity = req.body.quantity;
+                    cartItem.shoppingCartId = productData.id;
+                    cartItem.price = req.body.price;
+                    cartItem.quantity = req.body.quantity;
+                    cartItem.total = req.body.price * req.body.quantity;
+                    cartItem.size = req.body.size;
+                    cartItem.color = '';
+                    db.models.cart_item.create(cartItem).then(function (respone) {
+                        if(respone){
+                            res.json({
+                                status: 200,
+                                data: respone,
+                                message: 'Product added into cart successfully.'
+                            }); 
+                        } else {
+                            res.json({
+                                status: 401,
+                                data: [],
+                                message: 'Failed to add product in cart.'
+                            });
+                        }   
+                    })
+                }
+                else {
                     res.json({
                         status: 401,
                         data: [],
-                        message: 'Failed to add product in cart.'
+                        message: 'Failed to load product info.'
                     });
-                }   
+                }
+            }); 
+        }
+    })
+        
+};
+
+
+var checkProductExist = function(productId, callback) {
+    db.models.shopping_cart.findOne({
+        where:{
+            product_id: productId
+        }
+    }).then(function(result){
+        if(result) {
+            callback({
+                status: 200,
+                data: result,
+                message: 'Product already exist.'
+            })
+        } else {
+            callback({
+                status: 201,
+                data: [],
+                message: 'No Product Found.'
             })
         }
-        else {
-            res.json({
-                status: 401,
-                data: [],
-                message: 'Failed to load product info.'
-            });
-        }
-    });     
-};
+        
+    })
+}
 
 /**
  * Author Kaustubh Mishra
@@ -351,24 +370,48 @@ exports.updateCartProduct = function(req, res) {
 
 exports.getCartSummary = function(req, res) {
 
-    db.query("SELECT  SUM(total) AS TOTAL FROM cart_item",
-    {
-      type: sequelizeDb.QueryTypes.SELECT
-    }).then(function(orderData){
-        if(orderData) {
-            res.json({
-                status: 200,
-                data: orderData,
-                message: 'Cart summary loaded successfully.'
+    var userInfo = jwt.verify(req.token, 'secretkey');
+
+    db.models.shopping_cart.findAll({
+        where:{
+            userId: userInfo.id
+        },
+    }).then(function(shoppingData){
+        if(shoppingData.length > 0) {
+            var shoppingIdArray = [];
+            for (var i = 0; i < shoppingData.length ; i++) {
+                var shoppingIdObject = {
+                    "id":shoppingData[i].id
+                }
+                shoppingIdArray.push(shoppingIdObject);
+            }
+            console.log("shoppingIdArray---", shoppingIdArray)
+            var arr = shoppingIdArray.map(function(el) { 
+                return el.id; 
             });
-        } else {
-            res.json({
-                status: 401,
-                data: [],
-                message: 'Failed to load cart summary.'
-            });
+            db.query("SELECT  SUM(total) AS TOTAL FROM `cart_item` where `shoppingCartId` IN (" + arr +")",
+            {
+              type: sequelizeDb.QueryTypes.SELECT
+            }).then(function(orderData){
+                if(orderData) {
+                    res.json({
+                        status: 200,
+                        data: orderData,
+                        message: 'Cart summary loaded successfully.'
+                    });
+                } else {
+                    res.json({
+                        status: 401,
+                        data: [],
+                        message: 'Failed to load cart summary.'
+                    });
+                }
+            })
         }
-    })
+    });
+
+
+    
 };
 
 /**

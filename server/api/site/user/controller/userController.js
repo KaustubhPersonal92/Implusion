@@ -8,6 +8,8 @@ var email = require('nodemailer');
 var jwt = require('jsonwebtoken');
 
 var bcrypt = require('bcrypt');
+var payumoney = require('payumoney-node');
+var request = require('request');
 
 https://www.nexmo.com/blog/2016/10/19/how-to-send-sms-messages-with-node-js-and-express-dr/
 
@@ -28,6 +30,7 @@ exports.addUserData = function(req, res) {
     userData.password = req.body.user.password;
     userData.contactNumber = req.body.user.number;
     userData.gender = req.body.user.gender;
+    userData.status = 1;
     db.models.user.findOne({
         where:{
             email:req.body.user.email
@@ -40,9 +43,8 @@ exports.addUserData = function(req, res) {
                 message: 'Email-id already existed.'
             });
         } else {
-            addUserProcess(userData, req.body.cart, function(response){
+            addUserProcess(userData, function(response){
                 if(response) {
-                    response.userData.password = req.body.user.password;
                     userAuthenication(response.userData, function(loginSuccess){
                         if(loginSuccess.status ==200) {
                             res.json({
@@ -64,53 +66,33 @@ exports.addUserData = function(req, res) {
     })
 };
 
-var addUserProcess = function(user, cart, callback) {
-    bcrypt.hash(user.password, 10, function(err, hashPassword) {
-        if(hashPassword) {
-            user.password = hashPassword;
-            db.models.user.create(user).then(function(userData) {
+var addUserProcess = function(user, callback) {
+    db.models.user.create(user).then(function(userData) {
+        if(userData) {
+            db.models.user.findOne({
+                where:{
+                    email:user.email
+                },
+                attributes:['id']
+            }).then(function(user) {
+                //sendEmailUser(user);
                 if(userData) {
-                    db.models.user.findOne({
-                        where:{
-                            email:user.email
-                        },
-                        attributes:['id']
-                    }).then(function(user) {
-                        //sendEmailUser(user);
-                        if(userData) {
-                            callback({userData});
-                        } else {
-                            callback({
-                                status: 201,
-                                data: [],
-                                message: 'Unable to placed your order.'
-                            });
-                        }
-                        // addUserProduct(user.id, cart, function(respone){
-                        //     if(respone) {
-                        //         callback({
-                        //             userID: user.id,
-                        //         });
-                        //     } else {
-                        //         callback({
-                        //             status: 201,
-                        //             data: [],
-                        //             message: 'Unable to placed your order.'
-                        //         });
-                        //     }
-                        // })
-                    })    
-                }
-                else {
+                    callback({userData});
+                } else {
                     callback({
-                        status: 401,
+                        status: 201,
                         data: [],
-                        message: 'Failed to placed your order.'
+                        message: 'Unable to register user.'
                     });
                 }
+            })    
+        }
+        else {
+            callback({
+                status: 401,
+                data: [],
+                message: 'Unable to register user.'
             });
-        } else {
-
         }
     });    
 };
@@ -183,28 +165,35 @@ var sendEmailUser = function(user, callback) {
 exports.getloggedInUserProfile = function(req, res) {
 
     //Extract user id from user token;
-
-    var userInfo = jwt.verify(req.token, 'secretkey');
-
-    db.models.user.findOne({
-        where:{
-            id:userInfo.id
-        }
-    }).then(function(user){
-        if(user) {
-            res.json({
-                status: 200,
-                data: user,
-                message: 'User Profile loaded successfully.'
-            });
-        } else {
-            res.json({
-                status: 404,
-                data: [],
-                message: 'User Profile not found.'
-            });
-        }
-    });
+    if(req.token == 'null') {
+        res.json({
+            status: 404,
+            data: [],
+            message: 'Token not found.'
+        });
+    } else {
+        var userInfo = jwt.verify(req.token, 'secretkey');
+        db.models.user.findOne({
+            where:{
+                id:userInfo.id
+            }
+        }).then(function(user){
+            if(user) {
+                res.json({
+                    status: 200,
+                    data: user,
+                    message: 'User Profile loaded successfully.'
+                });
+            } else {
+                res.json({
+                    status: 404,
+                    data: [],
+                    message: 'User Profile not found.'
+                });
+            }
+        });
+    }
+    
 };
 
 /**
@@ -333,7 +322,6 @@ exports.updateUserAddress = function(req, res) {
     //Extract user id from user token;
 
     var userInfo = jwt.verify(req.token, 'secretkey');
-    console.log("req.params.addressId---", req.params.addressId)
     db.models.user_address.findOne({
         where:{
             id: req.params.id,
@@ -412,21 +400,11 @@ var userAuthenication = function(user, callback) {
         }
     }).then(function(userData){
         if(userData) {
-            bcrypt.compare(user.password, userData.password, function(err, result) {
-                if(result) {
-                    var token = jwt.sign({"id": userData.id,"email": userData.email},'secretkey');
-                    callback({
-                        status: 200,
-                        data: token,
-                        message: 'User logged in successfully.'
-                    });
-                } else {
-                    callback({
-                        status: 404,
-                        data: [],
-                        message: 'Password is invalid.'
-                    });
-                } 
+            var token = jwt.sign({"id": userData.id,"email": userData.email},'secretkey');
+            callback({
+                status: 200,
+                data: token,
+                message: 'User logged in successfully.'
             });
         } else {
             callback({
@@ -436,4 +414,198 @@ var userAuthenication = function(user, callback) {
             });
         }
     });
+};
+
+
+
+exports.makePayment = function(req, res) {
+    payumoney.setKeys('RgUogEdY', '9oRrszYL8n', 'LhnHUdr5vlbZ9roX9WsK6JY1l6Kz1DXIy1nSV24Qu54=');
+
+    payumoney.isProdMode(true);
+
+
+    var paymentData = {
+        productinfo: "Test",
+        txnid: "Test",
+        amount: "100",
+        email: "kmkaustubh11@gmail.com",
+        phone: "7007825959",
+        lastname: "Mishra",
+        firstname: "Kaustubh",
+        surl: "http://localhost:3000/payu/success",
+        furl: "http://localhost:3000/payu/fail"
+    };
+    
+    payumoney.makePayment(paymentData, function(error, response) {
+    if (error) {
+        // Some error
+        console.log()
+    } else {
+        res.json({
+            status: 200,
+            data: response,
+            message: 'Link'
+        });
+    }
+    });
 }
+
+/**
+ * Author Kaustubh Mishra
+ * Get Pincode
+ * @param  {obj}   req
+ * @param  {obj}   res
+ * @method GET
+ * @return json for User Info
+*/
+
+exports.getPincode = function(req, res) {
+    request.get('http://postalpincode.in/api/pincode/'+req.params.pincode, function(error, response, body){
+        res.json(JSON.parse(body));
+    })
+};
+
+
+/**
+ * Author Kaustubh Mishra
+ * Change Password
+ * @param  {obj}   req
+ * @param  {obj}   res
+ * @method GET
+ * @return json for User Info
+*/
+
+exports.changePassword = function(req, res) {
+    changePasswordProcess(req.body, function(response){
+        if(response.status == 200) {
+            res.json(response)
+        } else {
+            res.json(response)
+        }
+    });    
+};
+
+var changePasswordProcess = function(user, callback) {
+    db.models.user.findOne({
+        where:{
+            email:user.email
+        }
+    }).then(function(userData){
+        if(userData) {
+            if(userData.password == user.currentPassword) {
+                updatePassword(userData, user, function(response){
+                    callback(response);
+                })
+            } else {
+                callback({
+                    status: 404,
+                    data: [],
+                    message: 'Current Password is invalid.'
+                });
+            }
+        } else {
+            callback({
+                status: 404,
+                data: [],
+                message: 'Email is invalid.'
+            });
+        }
+    });
+};
+
+var updatePassword = (userData, user, callback) =>{
+    var userAddress = {};
+    userAddress.password = user.newPassword;
+    db.models.user.update(userAddress,{
+        where:{
+            id: userData.id,
+        }
+    }).then(function(updateUser){
+        if(updateUser) {
+            callback({
+                status: 200,
+                data: [],
+                message: 'Password updated successfully.'
+            });
+        } else {
+            callback({
+                status: 401,
+                data: [],
+                message: 'Unable to update password.'  
+            })
+        }
+    });
+};
+
+/**
+ * Author Kaustubh Mishra
+ * Change Password
+ * @param  {obj}   req
+ * @param  {obj}   res
+ * @method GET
+ * @return json for User Info
+*/
+
+exports.updateProfile = function(req, res) {
+    updateProfileProcess(req, function(response){
+        if(response.status == 200) {
+            res.json(response)
+        } else {
+            res.json(response)
+        }
+    });    
+};
+
+var updateProfileProcess = (request, callback)=>{
+    db.models.user.findOne({
+        where:{
+            id:request.params.id
+        }
+    }).then(function(userFound){
+        if(userFound) {
+            updateProfileFunc(userFound.id, request.body, function(response){
+                callback(response);
+            })
+        } else {
+            callback({
+                status: 401,
+                data: [],
+                message: 'User not found.'  
+            })
+        }
+        
+    })
+}
+
+var updateProfileFunc = (userId, data, callback)=>{
+    var userProfile = {};
+    userProfile.firstName = data.firstName;
+    userProfile.lastName = data.lastName;
+    userProfile.email = data.email;
+    userProfile.contactNumber = data.contactNumber;
+    userProfile.gender = data.gender;
+    
+    db.models.user.update(userProfile,{
+        where:{
+            id: userId,
+        }
+    }).then(function(updateUser){
+        if(updateUser) {
+            callback({
+                status: 200,
+                data: [],
+                message: 'Profile updated successfully.'
+            });
+        } else {
+            callback({
+                status: 401,
+                data: [],
+                message: 'Unable to update profile.'  
+            })
+        }
+    });
+}
+    
+
+
+

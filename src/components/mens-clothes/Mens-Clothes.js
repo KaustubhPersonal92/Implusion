@@ -49,6 +49,7 @@ class MensClothes extends Component {
 
 
 function mapStateToProps(state, ownProps) {
+  console.log("state---image", state)
   return {
     ProductImages: state.ProductImages,
   };

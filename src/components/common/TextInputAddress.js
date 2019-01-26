@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-const TextInputAddress = ({id,name, onChange , placeholder, type, value, error, onBlur}) => {
+const TextInputAddress = ({id,name, onChange , placeholder, type, value, error, onBlur, labelValue, maxLength, disabled}) => {
   let wrapperClass = 'xgroup';
   if (error && error.length > 0) {
     wrapperClass += " " + 'has-error';
@@ -16,8 +16,11 @@ const TextInputAddress = ({id,name, onChange , placeholder, type, value, error, 
         onChange={onChange}
         onBlur={onBlur}
         placeholder={placeholder}
+        maxlength={maxLength}
+        disabled={disabled}
       />
       {error && <div className="help-block">{error}</div>}
+      <label>{labelValue}</label>
     </div>
   );
 };

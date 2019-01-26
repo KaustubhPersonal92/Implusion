@@ -37,7 +37,7 @@ class Header extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.addUser = this.addUser.bind(this);
-    this.getUserProfile()
+    //this.getUserProfile()
   }
 
   isValidAuth() {
@@ -199,9 +199,14 @@ class Header extends Component {
                   {
                     that.userProfile.length > 0 &&
                     <ul className="_1jJkOg">
-                      <li className="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">My Account <span className="caret"></span></a>
+                      <li className="dropdown">
+                        <a className="dropdown-toggle" data-toggle="dropdown" href="#">
+                          <span className="glyphicon glyphicon-user"></span>
+                          <span> Account</span>
+                          <span className="glyphicon glyphicon-chevron-down"></span>
+                        </a>
                         <ul className="dropdown-menu">
-                          <li><a>< i className="far fa-user"></i> My Profile</a></li>
+                          <li><Link to="/myaccount">< i className="far fa-user"></i> My Profile</Link></li>
                           <li><Link to="/myaccount/orders"><i className="fas fa-folder"></i> My Orders</Link></li>
                           <li><a onClick={this.logout}><i className="glyphicon glyphicon-off"></i> Logout</a></li>
                         </ul>
@@ -363,6 +368,7 @@ class Header extends Component {
 
 
 function mapStateToProps(state, ownProps) {
+  console.log("state---", state)
   return {
     productCart: !lodash.isUndefined(state.ProductCart) ? state.ProductCart : state.ProductCart
   };
@@ -370,7 +376,8 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(productAction, dispatch)
+    actions: bindActionCreators(productAction, dispatch),
+
   };
 }
 

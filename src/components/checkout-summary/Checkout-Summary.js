@@ -19,6 +19,7 @@ class CheckoutSummary extends Component {
 			totalList:{},
 	    }
 		this.redirectToPayment =this.redirectToPayment.bind(this);
+		this.submit = this.submit.bind(this);
 	}
 
 	componentWillMount() {
@@ -35,7 +36,7 @@ class CheckoutSummary extends Component {
 		console.log("this.selectedUserAddress--", this.state.selectedUserAddress);
 		console.log("this.selectedUserAddress--", this.state.cart)
 
-		//this.setState({navigate:true});
+		this.setState({navigate:true});
 	}
 
 	getUserAddressById(addressId, userId) {
@@ -67,6 +68,18 @@ class CheckoutSummary extends Component {
 		  }
 		});
 	}
+
+	submit() {
+		this.props.actions.makePaymentAction().then(response=>{
+			if(response.status === 200) {
+				console.log("response----", response);
+				window.location.href = response.data;
+
+			} else {
+				toastr.error(response.message);
+			}
+		});
+  	}
 
 	
 
@@ -137,7 +150,7 @@ class CheckoutSummary extends Component {
 									Order Summary
 								</div>
 								<div className="_t5">Bag Total (Inclusive of all taxes)
-									<span className="pull-right"><i class="fa fa-inr"></i>{this.state.totalList.TOTAL}</span>
+									<span className="pull-right"><i className="fa fa-inr"></i>{this.state.totalList.TOTAL}</span>
 								</div>
 								<div className="_t5">Shipping Charges
 									<span className="pull-right"><p> FREE </p></span><br/>
@@ -153,7 +166,7 @@ class CheckoutSummary extends Component {
 							</div>
 							<hr style={{"height": "0px", "borderBottom": "1px solid rgb(238, 238, 238)"}} /><br/>
 							<div className="_uw">
-								<button className="col-xs-12 _uk _uu" style={{"height": "50px", "fontSize": "15px", "letterSpacing": "1px"}} onClick={this.redirectToPayment}>PROCEED TO PAYMENT &gt;</button>
+								<button className="col-xs-12 _uk _uu" style={{"height": "50px", "fontSize": "15px", "letterSpacing": "1px"}} onClick={this.submit}>PROCEED TO PAYMENT &gt;</button>
 							</div>
 						</div>
 						<div>

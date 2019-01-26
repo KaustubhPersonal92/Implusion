@@ -46,6 +46,7 @@ class ProductCart extends Component {
   }
 
   getCartList() {
+    console.log("!lodash.isEmpty(localStorage.getItem", !lodash.isEmpty(localStorage.getItem("user_token")))
     if(!lodash.isEmpty(localStorage.getItem("user_token"))) {
       this.props.actions.getUserCartDataAction(localStorage.getItem("user_token")).then(response=>{
         if(response.status === 200) {

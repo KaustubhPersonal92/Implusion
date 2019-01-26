@@ -12,7 +12,8 @@ module.exports = function(sequelize, DataTypes) {
             password: DataTypes.STRING,
             email: DataTypes.STRING,
             contactNumber: DataTypes.STRING,
-            gender: DataTypes.STRING
+            gender: DataTypes.STRING,
+            status: DataTypes.STRING
         }, 
         {
             freezeTableName: true,
