@@ -5,7 +5,7 @@ import * as env from '../config/urlConfig';
 class ProductApi {
   static getProductImagesApi() {
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/product/getProductImages").then(function(response) {
+      axios.get(env.Config.env.prod+"/api/product/getProductImages").then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data.data);
         }
@@ -18,7 +18,7 @@ class ProductApi {
 
   static getProductDataApi(id) {
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/product/getProductInfo/"+id).then(function(response) {
+      axios.get(env.Config.env.prod+"/api/product/getProductInfo/"+id).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -31,7 +31,7 @@ class ProductApi {
 
   static addToCartApi(cartData) {
     return new Promise((resolve, reject) => {
-      axios.post(env.Config.env.local+"/api/product/addToCart/", cartData).then(function(response) {
+      axios.post(env.Config.env.prod+"/api/product/addToCart/", cartData).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -44,7 +44,7 @@ class ProductApi {
 
   static getCartInfoApi(uniqueID) {
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/product/getCartDetail/"+uniqueID).then(function(response) {
+      axios.get(env.Config.env.prod+"/api/product/getCartDetail/"+uniqueID).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -64,7 +64,7 @@ class ProductApi {
     //   }
     // };
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/product/getCartSummary/").then(function(response) {
+      axios.get(env.Config.env.prod+"/api/product/getCartSummary/").then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -83,7 +83,7 @@ class ProductApi {
       "productId": productId
     };
     return new Promise((resolve, reject) => {
-      axios.post(env.Config.env.local+"/api/product/deleteCart/",cartObject).then(function(response) {
+      axios.post(env.Config.env.prod+"/api/product/deleteCart/",cartObject).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -96,7 +96,7 @@ class ProductApi {
 
   static updateCartApi(product) {
     return new Promise((resolve, reject) => {
-      axios.put(env.Config.env.local+"/api/product/updateCart/"+product.shoppingCart_id, product).then(function(response) {
+      axios.put(env.Config.env.prod+"/api/product/updateCart/"+product.shoppingCart_id, product).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -109,7 +109,7 @@ class ProductApi {
 
   static addUserApi(data) {
     return new Promise((resolve, reject) => {
-      axios.post(env.Config.env.local+"/api/user/addUser/", data).then(function(response) {
+      axios.post(env.Config.env.prod+"/api/user/addUser/", data).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -129,7 +129,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/user/getUserProfile/", config).then(function(response) {
+      axios.get(env.Config.env.prod+"/api/user/getUserProfile/", config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -142,7 +142,7 @@ class ProductApi {
 
   static userAuthenticationApi(data) {
     return new Promise((resolve, reject) => {
-      axios.post(env.Config.env.local+"/api/user/authenication/", data).then(function(response) {
+      axios.post(env.Config.env.prod+"/api/user/authenication/", data).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -162,7 +162,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/user/address/", config).then(function(response) {
+      axios.get(env.Config.env.prod+"/api/user/address/", config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -182,7 +182,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/pincode/"+pincode).then(function(response) {
+      axios.get(env.Config.env.prod+"/api/pincode/"+pincode).then(function(response) {
         if(response.data.status === 200) {
           resolve(response);
         }
@@ -202,7 +202,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.post(env.Config.env.local+"/api/user/address/", data, config).then(function(response) {
+      axios.post(env.Config.env.prod+"/api/user/address/", data, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -222,7 +222,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/user/address/"+addresId + "/" +userId, config).then(function(response) {
+      axios.get(env.Config.env.prod+"/api/user/address/"+addresId + "/" +userId, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -243,7 +243,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.put(env.Config.env.local+"/api/user/address/"+data.id, data, config).then(function(response) {
+      axios.put(env.Config.env.prod+"/api/user/address/"+data.id, data, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -267,7 +267,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.put(env.Config.env.local+"/api/product/updateUserCart/", data, config).then(function(response) {
+      axios.put(env.Config.env.prod+"/api/product/updateUserCart/", data, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -286,7 +286,7 @@ class ProductApi {
       }
     };
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.local+"/api/product/getUserCartData/", config).then(function(response) {
+      axios.get(env.Config.env.prod+"/api/product/getUserCartData/", config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -299,7 +299,7 @@ class ProductApi {
 
   static makePaymentApi() {
     return new Promise((resolve, reject) => {
-      axios.post(env.Config.env.local+"/makePayment").then(function(response) {
+      axios.post(env.Config.env.prod+"/makePayment").then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -321,7 +321,7 @@ class ProductApi {
     };
 
     return new Promise((resolve, reject) => {
-      axios.post(env.Config.env.local+"/api/user/changePassword", data, config).then(function(response) {
+      axios.post(env.Config.env.prod+"/api/user/changePassword", data, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
@@ -343,7 +343,7 @@ class ProductApi {
     };
 
     return new Promise((resolve, reject) => {
-      axios.put(env.Config.env.local+"/api/user/updateProfile/"+data.id, data, config).then(function(response) {
+      axios.put(env.Config.env.prod+"/api/user/updateProfile/"+data.id, data, config).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }
