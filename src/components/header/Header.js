@@ -37,11 +37,7 @@ class Header extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.addUser = this.addUser.bind(this);
-<<<<<<< HEAD
     this.getUserProfile();
-=======
-    //this.getUserProfile()
->>>>>>> 0d6740a62afb5568374fa57edb1ae7c802fba75d
   }
 
   isValidAuth() {
@@ -161,14 +157,9 @@ class Header extends Component {
   }
 
   render() {
-<<<<<<< HEAD
     const that = this.state;
     const { navigate } = this.state;
     console.log("that----", that.userProfile)
-=======
-    const that = this.state
-    const { navigate } = this.state
->>>>>>> 0d6740a62afb5568374fa57edb1ae7c802fba75d
     if (navigate) {
       return <Redirect to='/' push={true} />
     }
@@ -216,13 +207,8 @@ class Header extends Component {
                       <li className="dropdown">
                         <a className="dropdown-toggle" data-toggle="dropdown" href="#">
                           <span className="glyphicon glyphicon-user"></span>
-<<<<<<< HEAD
                           <span> {that.userProfile[0].firstName}</span>
                           <span className="glyphicon glyphicon-chevron-down account_subclass"></span>
-=======
-                          <span> Account</span>
-                          <span className="glyphicon glyphicon-chevron-down"></span>
->>>>>>> 0d6740a62afb5568374fa57edb1ae7c802fba75d
                         </a>
                         <ul className="dropdown-menu">
                           <li><Link to="/myaccount">< i className="far fa-user"></i> My Profile</Link></li>
@@ -263,11 +249,7 @@ class Header extends Component {
           <div className="row">
             <div className="modal fade login-register-form" role="dialog">
               <div className="modal-dialog" style={{"maxWidth": "400px"}}>
-<<<<<<< HEAD
                 <div className="modal-content" style={{"padding": "20px"}}>
-=======
-                <div className="modal-content">
->>>>>>> 0d6740a62afb5568374fa57edb1ae7c802fba75d
                   <div className="modal-header">
                     <button type="button" className="close" data-dismiss="modal">
                       <span className="glyphicon glyphicon-remove"></span>
@@ -391,10 +373,6 @@ class Header extends Component {
 
 
 function mapStateToProps(state, ownProps) {
-<<<<<<< HEAD
-=======
-  console.log("state---", state)
->>>>>>> 0d6740a62afb5568374fa57edb1ae7c802fba75d
   return {
     productCart: !lodash.isUndefined(state.ProductCart) ? state.ProductCart : state.ProductCart
   };

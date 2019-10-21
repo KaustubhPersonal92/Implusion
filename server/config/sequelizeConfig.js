@@ -5,10 +5,10 @@ module.exports = {
         path : __dirname + '/../models'
     },
     "db": {
-        "username": 'admin',
+        "username": 'mysqldb2019',
         "password": 'admin123',
         "database": 'impulsion',
-        "host": '34.220.168.152',
+        "host": 'mysqldb2019.cvhuacdsp1sn.us-east-2.rds.amazonaws.com',
         "dialect": 'mysql',
         "port": '3306'
     },
