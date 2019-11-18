@@ -13,7 +13,8 @@ module.exports = function(sequelize, DataTypes) {
             Product_Image: DataTypes.STRING,
             Updated_By: DataTypes.STRING,
             Last_Updated: DataTypes.STRING,
-            IsActive: DataTypes.INTEGER
+            IsActive: DataTypes.INTEGER,
+            category: DataTypes.STRING
         }, 
         {
             freezeTableName: true,

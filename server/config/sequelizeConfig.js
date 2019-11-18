@@ -15,7 +15,6 @@ module.exports = {
 
     // "db": {
     //     "username": 'root',
-    //     "password": '12345678',
     //     "database": 'implusion',
     //     "host": 'localhost',
     //     "dialect": 'mysql',

@@ -14,9 +14,9 @@ export function loadUserSuccess(userProfile) {
 }
 
 
-export function loadProductImages() {
+export function loadProductImages(category) {
 	return function (dispatch, getState) {
-    return ProductApi.getProductImagesApi().then(response => {
+    return ProductApi.getProductImagesApi(category).then(response => {
       dispatch(loadProductImagesSuccess(response));
     }).catch(error => {
       console.log(error)
@@ -208,6 +208,16 @@ export function changePasswordAction(data) {
 export function updateProfileAction(data) {
   return function (dispatch, getState) {
     return ProductApi.updateProfileApi(data).then(response => {
+      return response;
+    }).catch(error => {
+      console.log(error)
+    });
+  };
+}
+
+export function getFilterProducts(data) {
+  return function (dispatch, getState) {
+    return ProductApi.getFilterProductsApi(data).then(response => {
       return response;
     }).catch(error => {
       console.log(error)

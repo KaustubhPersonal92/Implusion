@@ -14,6 +14,8 @@ import CustomerOrders from './components/customer-orders/Customer-Orders';
 import Account from './components/my-account/My-Account';
 import UserAddress from './components/user-address/User-Address';
 import UserProfile from './components/user-profile/User-Profile';
+import FailedPayment from './components/payment/Failed-Payment';
+import SuccessPayment from './components/payment/Success-Payment';
 
 class App extends Component {
   render() {
@@ -33,6 +35,9 @@ class App extends Component {
           <Route exact name="index" path="/myaccount" component={Account}/>
           <Route exact name="index" path="/myaccount/address" component={UserAddress}/>
           <Route exact name="index" path="/myaccount/profile" component={UserProfile}/>
+          <Route exact name="index" path="/payment/failed" component={FailedPayment}/>
+          <Route exact name="index" path="/payment/success" component={SuccessPayment}/>
+          
         </div>
       </Router>
     );

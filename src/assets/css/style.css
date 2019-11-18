@@ -3138,6 +3138,29 @@ button[disabled], html input[disabled] {
   left:4px;
 }
 
+.serachList {
+  padding: 9px;
+  border: 1px solid rgba(0,0,0,.2);
+  height: 200px;
+  font-size: 16px;
+  background: #fff;
+  overflow: scroll;
+}
+
+.serachList li {
+  padding:10px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.nav-tabs li .active {
+  position: absolute;
+  left: 0;
+  bottom: -1.5px;
+  height: 3px;
+  width: 60px;
+  background-color: #F8694A;
+}
+
 
 /*=========================================================
 	12 -> RESPONSIVE

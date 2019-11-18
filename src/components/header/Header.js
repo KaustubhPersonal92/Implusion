@@ -15,6 +15,7 @@ class Header extends Component {
     super(props, context);
     this.state={
       userProfile:[],
+      filterList:[],
       auth:{
         "email":'',
         "password":''
@@ -37,6 +38,8 @@ class Header extends Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.addUser = this.addUser.bind(this);
+    this.getFilterProducts = this.getFilterProducts.bind(this);
+    this.outFocus = this.outFocus.bind(this);
     this.getUserProfile();
   }
 
@@ -81,7 +84,8 @@ class Header extends Component {
         if(response.status === 200) {
           const $ = window.$;
           $('.login-register-form').modal('hide');
-          localStorage.setItem("user_token", response.data);
+          localStorage.setItem("user_token", response.data.token);
+          localStorage.setItem("user_id", response.data.id);
           this.getUserProfile();
           this.updateUserIdInCart();
         } else {
@@ -156,6 +160,22 @@ class Header extends Component {
     }
   }
 
+  getFilterProducts(event) {
+    console.log("tets--", event.target.value);
+    this.props.actions.getFilterProducts(event.target.value).then(response=>{
+      console.log("response recieved---", response)
+      if(response.status == 200) {
+        this.setState({filterList:response.data})
+      } else {
+        this.setState({filterList:[]})
+      }
+    });
+  }
+
+  outFocus() {
+    this.setState({filterList:[]})
+  }
+
   render() {
     const that = this.state;
     const { navigate } = this.state;
@@ -173,24 +193,36 @@ class Header extends Component {
                   <img width="110" src={require("../../assets/images/header.png")} alt="Implusion" title="Implusion"/>
                 </Link>
                 <div className="_1NLCcM">
-                  <form className="_1WMLwI header-form-search" action="/search" method="GET">
+                  <div className="_1WMLwI header-form-search">
                     <div className="row">
-                      <div className="col-11-12">
+                      <div className="col-md-12">
                         <div className="O8ZS_U">
-                          <input type="text" value="" className="LM6RPg" title="Search for products, brands and more" name="q" placeholder="Search for products, brands and more"/>
+                          <input 
+                            type="text" 
+                            className="LM6RPg" 
+                            title="Search for products, brands and more" 
+                            name="q" 
+                            placeholder="Search for products, brands and more"
+                            onChange={this.getFilterProducts}
+                            onFocus={this.outFocus}
+                          />
                         </div>
+                        {
+                          this.state.filterList.length > 0  &&
+                          <ul className="serachList">
+                          {
+                            this.state.filterList.map(data=>
+                            <li>
+                              <Link to={'/product/' + data.id}>
+                              { data.Name }
+                              </Link>
+                            </li>
+                          )}
+                        </ul>
+                        }
                       </div>
-                      <div className="col-1-12">
-                        <button className="vh79eN" type="submit">
-                          <svg width="20px" height="20px" viewBox="0 0 17 18" className="" xmlns="http://www.w3.org/2000/svg"><g fill="#2874F1" fillRule="evenodd"><path className="_2BhAHa" d="m11.618 9.897l4.225 4.212c.092.092.101.232.02.313l-1.465 1.46c-.081.081-.221.072-.314-.02l-4.216-4.203"></path><path className="_2BhAHa" d="m6.486 10.901c-2.42 0-4.381-1.956-4.381-4.368 0-2.413 1.961-4.369 4.381-4.369 2.42 0 4.381 1.956 4.381 4.369 0 2.413-1.961 4.368-4.381 4.368m0-10.835c-3.582 0-6.486 2.895-6.486 6.467 0 3.572 2.904 6.467 6.486 6.467 3.582 0 6.486-2.895 6.486-6.467 0-3.572-2.904-6.467-6.486-6.467"></path></g></svg>
-                        </button>
-                      </div>
-                      <input type="hidden" name="otracker" value="start"/>
-                      <input type="hidden" name="as-show" value="off"/>
-                      <input type="hidden" name="as" value="off"/>
                     </div>
-                    <ul className="col-11-12 _1PBbw8"></ul>
-                  </form>
+                  </div>
                 </div>
                 <div className="_1Wr4v5">
                   {

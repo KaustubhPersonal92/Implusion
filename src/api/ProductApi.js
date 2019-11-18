@@ -3,9 +3,9 @@ import * as Data from '../interceptor';
 import * as env from '../config/urlConfig';
 
 class ProductApi {
-  static getProductImagesApi() {
+  static getProductImagesApi(data) {
     return new Promise((resolve, reject) => {
-      axios.get(env.Config.env.prod+"/api/product/getProductImages").then(function(response) {
+      axios.get(env.Config.env.prod+"/api/product/getProductImages?category="+data).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data.data);
         }
@@ -121,7 +121,7 @@ class ProductApi {
   }
 
   static getUserProfileApi() {
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ class ProductApi {
   }
 
   static getUserAddressApi() {
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ class ProductApi {
   }
 
   static getPincodeApi(pincode) {
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ class ProductApi {
   }
 
   static addUserAddressApi(data) {
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ class ProductApi {
   }
 
   static getUserAddressByIdActionApi(addresId, userId) {
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -235,7 +235,7 @@ class ProductApi {
 
   static updateUserAddressApi(data) {
     console.log("data---", data)
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -259,7 +259,7 @@ class ProductApi {
       "uniqueId":uniqueId
     };
 
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     var config = {
       headers: {
         'Content-Type': 'application/json',
@@ -311,7 +311,7 @@ class ProductApi {
   }
 
   static changePasswordApi(data) {
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     
     var config = {
       headers: {
@@ -333,7 +333,7 @@ class ProductApi {
   }
 
   static updateProfileApi(data) {
-    var userToken = "Bearer "+ localStorage.getItem("user_token");
+    var userToken = "Bearer "+ prodStorage.getItem("user_token");
     
     var config = {
       headers: {
@@ -344,6 +344,22 @@ class ProductApi {
 
     return new Promise((resolve, reject) => {
       axios.put(env.Config.env.prod+"/api/user/updateProfile/"+data.id, data, config).then(function(response) {
+        if(response.data.status === 200) {
+          resolve(response.data);
+        }
+        else {
+          resolve(response.data);
+        }
+      })
+    });
+  }
+
+  static getFilterProductsApi(data) {
+    var filterObj = {
+      "search":data
+    }
+    return new Promise((resolve, reject) => {
+      axios.post(env.Config.env.prod+"/api/product/getFilterProduct", filterObj).then(function(response) {
         if(response.data.status === 200) {
           resolve(response.data);
         }

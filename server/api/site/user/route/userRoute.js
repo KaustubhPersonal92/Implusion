@@ -28,6 +28,4 @@ module.exports = function(app) {
 
 	app.put('/api/user/updateProfile/:id', userController.updateProfile);
 
-    
-
 };

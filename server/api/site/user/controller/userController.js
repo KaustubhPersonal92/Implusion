@@ -396,14 +396,19 @@ exports.userLogin = function(req, res) {
 var userAuthenication = function(user, callback) {
     db.models.user.findOne({
         where:{
-            email:user.email
+            email:user.email,
+            password: user.password
         }
     }).then(function(userData){
         if(userData) {
             var token = jwt.sign({"id": userData.id,"email": userData.email},'secretkey');
+            var responseObj = {
+                "token":token,
+                "id": userData.id      
+            }
             callback({
                 status: 200,
-                data: token,
+                data: responseObj,
                 message: 'User logged in successfully.'
             });
         } else {
@@ -432,8 +437,8 @@ exports.makePayment = function(req, res) {
         phone: "7007825959",
         lastname: "Mishra",
         firstname: "Kaustubh",
-        surl: "http://localhost:3000/payu/success",
-        furl: "http://localhost:3000/payu/fail"
+        surl: "http://localhost:3000/payment/success",
+        furl: "http://localhost:3000/payment/failed"
     };
     
     payumoney.makePayment(paymentData, function(error, response) {

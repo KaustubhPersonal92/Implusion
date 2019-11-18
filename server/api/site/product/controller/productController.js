@@ -24,7 +24,8 @@ https://www.nexmo.com/blog/2016/10/19/how-to-send-sms-messages-with-node-js-and-
 exports.getProductImages = function(req, res) {
     db.models.products.findAll({
         where:{
-            isActive:1
+            isActive:1,
+            category: req.query.category
         }
     }).then(function(product) {
         if(product) {
@@ -90,51 +91,87 @@ exports.addToCartProduct = function(req, res) {
     cartData.quantity = req.body.quantity;
     cartData.product_id = req.body.productId;
     cartData.uniqueId = req.body.uniqueId;
-    checkProductExist(req.body, function(result){
-        if(result.status ==200) {
-            res.json({
-                status: 200,
-                data: result,
-                message: 'Product added into cart successfully.'
-            }); 
-        } else {
-            db.models.shopping_cart.create(cartData).then(function(productData) {
-                if(productData) {
-                    var cartItem = {};
-                    cartItem.productId = req.body.productId;
-                    cartItem.quantity = req.body.quantity;
-                    cartItem.shoppingCartId = productData.id;
-                    cartItem.price = req.body.price;
-                    cartItem.quantity = req.body.quantity;
-                    cartItem.total = req.body.price * req.body.quantity;
-                    cartItem.size = req.body.size;
-                    cartItem.color = '';
-                    db.models.cart_item.create(cartItem).then(function (respone) {
-                        if(respone){
-                            res.json({
-                                status: 200,
-                                data: respone,
-                                message: 'Product added into cart successfully.'
-                            }); 
-                        } else {
-                            res.json({
-                                status: 401,
-                                data: [],
-                                message: 'Failed to add product in cart.'
-                            });
-                        }   
-                    })
-                }
-                else {
+    cartData.userId = req.body.userId;
+    // checkProductExist(req.body, function(result){
+    //     if(result.status ==200) {
+    //         res.json({
+    //             status: 200,
+    //             data: result,
+    //             message: 'Product added into cart successfully.'
+    //         }); 
+    //     } else {
+    //         db.models.shopping_cart.create(cartData).then(function(productData) {
+    //             if(productData) {
+    //                 var cartItem = {};
+    //                 cartItem.productId = req.body.productId;
+    //                 cartItem.quantity = req.body.quantity;
+    //                 cartItem.shoppingCartId = productData.id;
+    //                 cartItem.price = req.body.price;
+    //                 cartItem.quantity = req.body.quantity;
+    //                 cartItem.total = req.body.price * req.body.quantity;
+    //                 cartItem.size = req.body.size;
+    //                 cartItem.color = '';
+    //                 db.models.cart_item.create(cartItem).then(function (respone) {
+    //                     if(respone){
+    //                         res.json({
+    //                             status: 200,
+    //                             data: respone,
+    //                             message: 'Product added into cart successfully.'
+    //                         }); 
+    //                     } else {
+    //                         res.json({
+    //                             status: 401,
+    //                             data: [],
+    //                             message: 'Failed to add product in cart.'
+    //                         });
+    //                     }   
+    //                 })
+    //             }
+    //             else {
+    //                 res.json({
+    //                     status: 401,
+    //                     data: [],
+    //                     message: 'Failed to load product info.'
+    //                 });
+    //             }
+    //         }); 
+    //     }
+    // })
+    db.models.shopping_cart.create(cartData).then(function(productData) {
+        if(productData) {
+            var cartItem = {};
+            cartItem.productId = req.body.productId;
+            cartItem.quantity = req.body.quantity;
+            cartItem.shoppingCartId = productData.id;
+            cartItem.price = req.body.price;
+            cartItem.quantity = req.body.quantity;
+            cartItem.total = req.body.price * req.body.quantity;
+            cartItem.size = req.body.size;
+            cartItem.color = '';
+            db.models.cart_item.create(cartItem).then(function (respone) {
+                if(respone){
+                    res.json({
+                        status: 200,
+                        data: respone,
+                        message: 'Product added into cart successfully.'
+                    }); 
+                } else {
                     res.json({
                         status: 401,
                         data: [],
-                        message: 'Failed to load product info.'
+                        message: 'Failed to add product in cart.'
                     });
-                }
-            }); 
+                }   
+            })
         }
-    })
+        else {
+            res.json({
+                status: 401,
+                data: [],
+                message: 'Failed to load product info.'
+            });
+        }
+    }); 
         
 };
 
@@ -143,7 +180,7 @@ var checkProductExist = function(data, callback) {
     db.models.shopping_cart.findOne({
         where:{
             product_id: data.productId,
-            uniqueId: data.uniqueId
+            userId: data.userId
         }
     }).then(function(result){
         if(result) {
@@ -634,6 +671,44 @@ exports.getUserCartData = function(req, res) {
                 message: 'Failed to load data..!'
             });
             
+        }
+        else {
+            res.json({
+                status: 404,
+                data: [],
+                message: 'Failed to load data..!'
+            });
+        }
+    }).catch(function(err) {
+        console.log(err);
+    });     
+};
+
+/**
+ * Author Kaustubh Mishra
+ * Get Filter Products from db
+ * @param  {obj}   req
+ * @param  {obj}   res
+ * @method GET
+ * @return json for Product Info
+*/
+
+exports.getFilterProduct = function(req, res) {
+    console.log("req----", req.body)
+    db.models.products.findAll({
+        where:{
+            Name:{
+                like:'%'+req.body.search+'%'
+            }
+        },
+    }).then(function (productData){
+        var trialListArray = [];
+        if(productData.length > 0) {
+            res.json({
+                status: 200,
+                data: productData,
+                message: 'Data loaded successfully..'
+            });
         }
         else {
             res.json({

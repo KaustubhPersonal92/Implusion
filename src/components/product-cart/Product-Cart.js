@@ -90,7 +90,7 @@ class ProductCart extends Component {
 
   updateCart(product) {
     var productQuantity = 1;
-    product.productQuantity = 1 + product.productQuantity;
+    product.productQuantity = productQuantity + parseInt(product.productQuantity);
     this.props.actions.updateCartData(product).then(response=>{
       if(response.status === 200) {
         toastr.success(response.message);

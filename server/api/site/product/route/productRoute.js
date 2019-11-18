@@ -5,7 +5,7 @@ const tokenGetter = require('../../../../middleware/middleware');
 
 module.exports = function(app) {
     
-    app.get('/api/product/getProductImages', productController.getProductImages);
+    app.get('/api/product/getProductImages/:category?', productController.getProductImages);
 
     app.get('/api/product/getProductInfo/:id', productController.getProductInfoById);
 
@@ -21,7 +21,9 @@ module.exports = function(app) {
 
 	app.put('/api/product/updateUserCart/', tokenGetter, productController.updateUserCart);
 
-	app.get('/api/product/getUserCartData/', tokenGetter, productController.getUserCartData);
+    app.get('/api/product/getUserCartData/', tokenGetter, productController.getUserCartData);
+    
+    app.post('/api/product/getFilterProduct', productController.getFilterProduct);
 	
 	
 
